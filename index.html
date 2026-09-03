@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>V&amp;B Performance Apparel | Hecho Para Rendir</title>
+<meta name="description" content="V&amp;B Performance Apparel — ropa deportiva premium para quienes exigen más de sí mismos. Camisetas tipo tank en negro, blanco y merlot. Hecho para rendir.">
+<meta name="theme-color" content="#050505">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== PANTALLA DE CARGA ===== -->
+<div id="loader" class="loader" aria-hidden="true">
+  <div class="loader__mark">
+    <img src="assets/img/brand/logo-mark-lg.webp" alt="" width="480" height="249">
+  </div>
+  <div class="loader__bar"><span></span></div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="header" id="header">
+  <div class="header__row">
+    <a href="#inicio" class="header__logo" aria-label="V&amp;B Performance Apparel — Inicio">
+      <img src="assets/img/brand/logo-mark.webp" alt="V&amp;B" width="150" height="78">
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#inicio" class="nav__link">Inicio</a>
+      <a href="#coleccion" class="nav__link">Colección</a>
+      <a href="#productos" class="nav__link">Productos</a>
+      <a href="#nosotros" class="nav__link">Nosotros</a>
+    </nav>
+
+    <div class="header__actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Buscar" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn icon-btn--cart" id="cartToggle" aria-label="Carrito de compras" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h2l1.4 12.6a2 2 0 0 0 2 1.8h8.4a2 2 0 0 0 2-1.7L20 8H6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20.5" r="1.4"/><circle cx="17" cy="20.5" r="1.4"/></svg>
+        <span class="icon-btn__badge" id="cartCount" hidden>0</span>
+      </button>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-panel" id="searchPanel">
+    <div class="search-panel__row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar TANK BLACK, WHITE, MERLOT…" autocomplete="off">
+      <button id="searchClose" aria-label="Cerrar búsqueda">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <p class="search-panel__hint" id="searchHint"></p>
+  </div>
+</header>
+
+<!-- overlay menú móvil -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+<main id="main-content">
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="inicio">
+  <div class="hero__media">
+    <img src="assets/img/model/athlete-black-gym.webp" alt="Atleta entrenando con camiseta tank V&amp;B Performance Apparel en color negro" width="570" height="1114" fetchpriority="high">
+    <div class="hero__media-fade" aria-hidden="true"></div>
+  </div>
+
+  <span class="hero__vtext" aria-hidden="true">PERFORMANCE&nbsp;APPAREL</span>
+
+  <div class="hero__content">
+    <p class="eyebrow reveal">V&amp;B — PERFORMANCE APPAREL</p>
+    <h1 class="hero__title reveal">
+      <span class="line">HECHO</span>
+      <span class="line">PARA</span>
+      <span class="line accent">RENDIR<span class="dot">.</span></span>
+    </h1>
+    <p class="hero__sub reveal">Diseñado para acompañarte en cada entrenamiento y cada reto.</p>
+    <div class="hero__cta reveal">
+      <a href="#productos" class="btn btn--primary">Comprar ahora</a>
+      <a href="#coleccion" class="btn btn--ghost">Ver colección</a>
+    </div>
+  </div>
+
+  <div class="hero__index" aria-hidden="true">
+    <span>N.01</span>
+    <span class="hero__index-line"></span>
+    <span>TANK COLLECTION</span>
+  </div>
+
+  <a href="#coleccion" class="hero__scroll" aria-label="Desplazarse hacia abajo">
+    <span>SCROLL</span>
+    <i></i>
+  </a>
+</section>
+
+<!-- ===== VALOR / DISCIPLINA ===== -->
+<section class="value" id="coleccion">
+  <div class="value__bg" aria-hidden="true">
+    <img src="assets/img/product/detail-black.webp" alt="" width="612" height="756" loading="lazy" decoding="async">
+  </div>
+  <div class="value__inner">
+    <p class="eyebrow reveal">DISCIPLINA</p>
+    <h2 class="value__title reveal">
+      <span class="line">CADA RETO.</span>
+      <span class="line">CADA ENTRENAMIENTO.</span>
+      <span class="line">CADA DÍA.</span>
+    </h2>
+    <p class="value__caption reveal">En V&amp;B creemos que el rendimiento comienza con la disciplina.</p>
+  </div>
+</section>
+
+<!-- ===== DETALLES / PRODUCTO DESTACADO ===== -->
+<section class="detail" id="detalles">
+  <div class="detail__head">
+    <p class="eyebrow reveal">ACABADOS</p>
+    <h2 class="section-title reveal">
+      <span class="line">DETALLES</span>
+      <span class="line">QUE MARCAN</span>
+      <span class="line">LA DIFERENCIA.</span>
+    </h2>
+  </div>
+
+  <div class="bento reveal">
+    <figure class="bento__item bento__item--a">
+      <img src="assets/img/product/detail-black.webp" alt="Costura y logo V&amp;B en tela premium de secado rápido, camiseta tank negra" width="612" height="756" loading="lazy" decoding="async">
+      <figcaption><span>01</span>Tela premium de secado rápido</figcaption>
+    </figure>
+    <figure class="bento__item bento__item--b">
+      <img src="assets/img/model/athlete-white-gym.webp" alt="Atleta usando camiseta tank V&amp;B blanca en zona de entrenamiento" width="564" height="1099" loading="lazy" decoding="async">
+      <figcaption><span>02</span>Hecho para el entrenamiento</figcaption>
+    </figure>
+    <figure class="bento__item bento__item--c">
+      <img src="assets/img/product/detail-merlot.webp" alt="Detalle de etiqueta técnica y costura en camiseta tank V&amp;B color merlot" width="612" height="756" loading="lazy" decoding="async">
+      <figcaption><span>03</span>Acabado y costura reforzada</figcaption>
+    </figure>
+  </div>
+
+  <ul class="features reveal">
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 20c8-1 13-6 15-15-9 1-14 6-15 15Z" stroke-linejoin="round"/><path d="M8 16c2-3 5-6 9-8"/></svg>
+      <span>Ligero</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h11a3 3 0 1 0-3-3" stroke-linecap="round"/><path d="M3 13h15a3 3 0 1 1-3 3" stroke-linecap="round"/><path d="M3 18h9a3 3 0 1 0-3-3" stroke-linecap="round"/></svg>
+      <span>Transpirable</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3c3.5 4.2 6 7.8 6 11a6 6 0 1 1-12 0c0-3.2 2.5-6.8 6-11Z" stroke-linejoin="round"/></svg>
+      <span>Secado rápido</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z" stroke-linejoin="round"/></svg>
+      <span>Premium</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Z" stroke-linejoin="round"/><path d="M3 7l9 5 9-5M12 12v10" stroke-linejoin="round"/></svg>
+      <span>Hecho en Colombia</span>
+    </li>
+  </ul>
+</section>
+
+<!-- ===== ELIGE TU COLOR ===== -->
+<section class="shop" id="productos">
+  <div class="shop__head">
+    <p class="eyebrow reveal">NEW DROP</p>
+    <h2 class="section-title reveal">
+      <span class="line">ELIGE TU</span>
+      <span class="line accent">RENDIMIENTO.</span>
+    </h2>
+  </div>
+
+  <div class="shop__grid">
+
+    <article class="product-card reveal" data-name="TANK BLACK" id="card-black">
+      <div class="product-card__media">
+        <img src="assets/img/product/tank-black.webp" alt="Camiseta tank V&amp;B Performance Apparel color negro" width="572" height="780" loading="lazy" decoding="async">
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__row">
+          <h3>TANK BLACK</h3>
+          <span class="swatch swatch--black" aria-hidden="true"></span>
+        </div>
+        <p class="product-card__price">$59.900</p>
+        <div class="size-picker" role="group" aria-label="Talla — Tank Black">
+          <button type="button" class="size-pill">S</button>
+          <button type="button" class="size-pill is-active">M</button>
+          <button type="button" class="size-pill">L</button>
+          <button type="button" class="size-pill">XL</button>
+        </div>
+        <button type="button" class="btn btn--buy" data-add-cart data-id="tank-black" data-name="TANK BLACK" data-price="59900" data-img="assets/img/product/tank-black.webp">
+          <span>Comprar ahora</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+    <article class="product-card product-card--light reveal" data-name="TANK WHITE" id="card-white">
+      <div class="product-card__media">
+        <img src="assets/img/product/tank-white.webp" alt="Camiseta tank V&amp;B Performance Apparel color blanco" width="575" height="770" loading="lazy" decoding="async">
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__row">
+          <h3>TANK WHITE</h3>
+          <span class="swatch swatch--white" aria-hidden="true"></span>
+        </div>
+        <p class="product-card__price">$59.900</p>
+        <div class="size-picker" role="group" aria-label="Talla — Tank White">
+          <button type="button" class="size-pill">S</button>
+          <button type="button" class="size-pill is-active">M</button>
+          <button type="button" class="size-pill">L</button>
+          <button type="button" class="size-pill">XL</button>
+        </div>
+        <button type="button" class="btn btn--buy" data-add-cart data-id="tank-white" data-name="TANK WHITE" data-price="59900" data-img="assets/img/product/tank-white.webp">
+          <span>Comprar ahora</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+    <article class="product-card reveal" data-name="TANK MERLOT" id="card-merlot">
+      <div class="product-card__media">
+        <img src="assets/img/product/tank-merlot.webp" alt="Camiseta tank V&amp;B Performance Apparel color merlot" width="577" height="755" loading="lazy" decoding="async">
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__row">
+          <h3>TANK MERLOT</h3>
+          <span class="swatch swatch--merlot" aria-hidden="true"></span>
+        </div>
+        <p class="product-card__price">$59.900</p>
+        <div class="size-picker" role="group" aria-label="Talla — Tank Merlot">
+          <button type="button" class="size-pill">S</button>
+          <button type="button" class="size-pill is-active">M</button>
+          <button type="button" class="size-pill">L</button>
+          <button type="button" class="size-pill">XL</button>
+        </div>
+        <button type="button" class="btn btn--buy" data-add-cart data-id="tank-merlot" data-name="TANK MERLOT" data-price="59900" data-img="assets/img/product/tank-merlot.webp">
+          <span>Comprar ahora</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== SECCIÓN INMERSIVA ===== -->
+<section class="immersive">
+  <img src="assets/img/model/athlete-white-walk.webp" alt="Atleta caminando al aire libre con camiseta tank V&amp;B blanca" width="460" height="1169" loading="lazy" decoding="async">
+  <div class="immersive__scrim" aria-hidden="true"></div>
+
+  <div class="immersive__mark reveal">
+    <span>V&amp;B</span>
+    <small>PERFORMANCE APPAREL</small>
+  </div>
+
+  <div class="immersive__quote reveal">
+    <p class="immersive__italic">"Más que ropa deportiva."</p>
+    <p class="immersive__strong">HECHO PARA <span class="accent">RENDIR.</span></p>
+  </div>
+
+  <div class="immersive__index" aria-hidden="true">
+    <span>N.02</span>
+    <span>LAT 10.46&deg; N — COL</span>
+  </div>
+</section>
+
+<!-- ===== BENEFICIOS / NOSOTROS ===== -->
+<section class="about" id="nosotros">
+  <div class="about__media reveal">
+    <img src="assets/img/model/athlete-merlot-gym.webp" alt="Atleta entrenando con camiseta tank V&amp;B merlot en el gimnasio" width="568" height="1100" loading="lazy" decoding="async">
+  </div>
+  <div class="about__content">
+    <p class="eyebrow reveal">NOSOTROS</p>
+    <h2 class="about__title reveal">Más que ropa deportiva.</h2>
+    <p class="about__text reveal">V&amp;B representa disciplina, constancia y la búsqueda de la mejor versión de uno mismo.</p>
+
+    <ol class="benefits reveal">
+      <li>
+        <span class="benefits__n">01</span>
+        <div>
+          <h3>Diseño minimalista</h3>
+          <p>Cada detalle pensado para una apariencia limpia y moderna.</p>
+        </div>
+      </li>
+      <li>
+        <span class="benefits__n">02</span>
+        <div>
+          <h3>Rendimiento</h3>
+          <p>Materiales diseñados para acompañar cada entrenamiento.</p>
+        </div>
+      </li>
+      <li>
+        <span class="benefits__n">03</span>
+        <div>
+          <h3>Calidad premium</h3>
+          <p>Comodidad y estilo para quienes exigen más.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section class="final-cta">
+  <img src="assets/img/model/athlete-black-outdoor.webp" alt="Atleta con camiseta tank V&amp;B negra, actitud de rendimiento" width="554" height="1564" loading="lazy" decoding="async">
+  <div class="final-cta__scrim" aria-hidden="true"></div>
+  <div class="final-cta__content reveal">
+    <h2 class="final-cta__title">
+      <span class="line">HECHO</span>
+      <span class="line">PARA</span>
+      <span class="line accent">RENDIR<span class="dot">.</span></span>
+    </h2>
+    <a href="#productos" class="btn btn--primary">Comprar ahora</a>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer__top">
+    <div class="footer__brand">
+      <img src="assets/img/brand/logo-full.webp" alt="V&amp;B" width="180" height="114" loading="lazy" decoding="async">
+      <p>PERFORMANCE APPAREL</p>
+    </div>
+
+    <nav class="footer__links" aria-label="Enlaces del sitio">
+      <a href="#inicio">Inicio</a>
+      <a href="#productos">Productos</a>
+      <a href="#coleccion">Colección</a>
+      <a href="#nosotros">Nosotros</a>
+    </nav>
+
+    <div class="footer__social" aria-label="Redes sociales">
+      <a href="#" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+      <a href="#" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3v11.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round"/><path d="M14 3c.5 2.6 2.2 4.3 5 4.7" stroke-linecap="round"/></svg>
+      </a>
+      <a href="#" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 8h2V4h-2a4 4 0 0 0-4 4v2H9v4h2v6h4v-6h2.5l.5-4H15V8Z" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <p>&copy; 2026 V&amp;B PERFORMANCE APPAREL</p>
+    <p>HECHO PARA <span class="accent">RENDIR.</span></p>
+  </div>
+</footer>
+
+<!-- ===== CARRITO ===== -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart" id="cart" aria-label="Carrito de compras">
+  <div class="cart__head">
+    <h2>Tu carrito</h2>
+    <button id="cartClose" aria-label="Cerrar carrito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="cart__items" id="cartItems">
+    <p class="cart__empty" id="cartEmpty">Tu carrito está vacío.<br>Elige tu color y empieza a rendir.</p>
+  </div>
+  <div class="cart__foot">
+    <div class="cart__total">
+      <span>Subtotal</span>
+      <strong id="cartTotal">$0</strong>
+    </div>
+    <button class="btn btn--primary btn--full" id="cartCheckout">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-1.3-.6-2.1-1.1-3-2.5-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4-.1-.1-.5-1.3-.7-1.7-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.5 3.9 3.5.5.2.9.4 1.3.5.5.2 1 .1 1.3-.1.4-.2 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>
+      <span>Finalizar por WhatsApp</span>
+    </button>
+  </div>
+</aside>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

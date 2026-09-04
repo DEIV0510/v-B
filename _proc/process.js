@@ -47,26 +47,25 @@ async function run() {
   // Opaque logo (with its own dark vignette bg) for full-bleed brand moments
   await sharp(p(SRC,'LOGO.png')).webp({quality:90}).toFile(p(OUT,'brand','logo-plate.webp'));
 
-  // ---------- PRODUCT flat-lays ----------
+  // ---------- PRODUCT flat-lays (native res, mild sharpen, high quality) ----------
   const products = ['camisa.png','camisa2.png','camisa3.png'];
   const productNames = ['tank-black.webp','tank-white.webp','tank-merlot.webp'];
   for (let i=0;i<products.length;i++){
-    await sharp(p(SRC,products[i])).webp({quality:92}).toFile(p(OUT,'product',productNames[i]));
+    await sharp(p(SRC,products[i])).sharpen({sigma:0.6}).webp({quality:96, effort:6}).toFile(p(OUT,'product',productNames[i]));
   }
 
-  // ---------- MODEL crops (remove baked-in text zones) ----------
+  // ---------- MODEL crops (remove baked-in text zones), wider where safe + sharpened upscale ----------
   const crops = [
-    {file:'info.png',  out:'athlete-black-gym.webp',   left:250, top:0,  width:335, height:655, scale:1.7},
-    {file:'info2.png', out:'athlete-merlot-gym.webp',  left:248, top:0,  width:334, height:647, scale:1.7},
-    {file:'info3.png', out:'athlete-white-gym.webp',   left:250, top:0,  width:332, height:647, scale:1.7},
-    {file:'info4.png', out:'athlete-black-outdoor.webp', left:340, top:0, width:277, height:782, scale:2.0},
-    {file:'info5.png', out:'athlete-white-walk.webp', left:270, top:35, width:242, height:615, scale:1.9},
+    {file:'info.png',  out:'athlete-black-gym.webp',   left:235, top:0,  width:350, height:655, outW:760},
+    {file:'info2.png', out:'athlete-merlot-gym.webp',  left:233, top:0,  width:349, height:647, outW:760},
+    {file:'info3.png', out:'athlete-white-gym.webp',   left:235, top:0,  width:347, height:647, outW:700},
+    {file:'info4.png', out:'athlete-black-outdoor.webp', left:340, top:0, width:277, height:782, outW:700},
+    {file:'info5.png', out:'athlete-white-walk.webp', left:270, top:35, width:242, height:615, outW:700},
   ];
   for (const c of crops){
     const img = sharp(p(SRC,c.file)).extract({left:c.left, top:c.top, width:c.width, height:c.height});
-    const outW = Math.round(c.width * c.scale);
-    await img.clone().resize({width: outW, kernel:'lanczos3'}).webp({quality:90}).toFile(p(OUT,'model', c.out));
-    await img.clone().resize({width: Math.min(outW, 700), kernel:'lanczos3'}).png().toFile(p(PROC,'preview', c.out.replace('.webp','.png')));
+    await img.clone().resize({width: c.outW, kernel:'lanczos3'}).sharpen({sigma:1.1, m1:0.8, m2:0.4}).webp({quality:94, effort:6}).toFile(p(OUT,'model', c.out));
+    await img.clone().resize({width: Math.min(c.outW, 700), kernel:'lanczos3'}).sharpen({sigma:1.1, m1:0.8, m2:0.4}).png().toFile(p(PROC,'preview', c.out.replace('.webp','.png')));
   }
 
   // ---------- Detail crops (fabric + chest logo close-up) for feature/editorial sections ----------
@@ -77,8 +76,8 @@ async function run() {
   ];
   for (const d of details){
     const img = sharp(p(SRC,d.file)).extract({left:d.left, top:d.top, width:d.width, height:d.height});
-    await img.clone().resize({width: Math.round(d.width*1.8), kernel:'lanczos3'}).webp({quality:90}).toFile(p(OUT,'product', d.out));
-    await img.clone().resize({width: Math.min(Math.round(d.width*1.8),650), kernel:'lanczos3'}).png().toFile(p(PROC,'preview', d.out.replace('.webp','.png')));
+    await img.clone().resize({width: Math.round(d.width*1.8), kernel:'lanczos3'}).sharpen({sigma:0.9}).webp({quality:95, effort:6}).toFile(p(OUT,'product', d.out));
+    await img.clone().resize({width: Math.min(Math.round(d.width*1.8),650), kernel:'lanczos3'}).sharpen({sigma:0.9}).png().toFile(p(PROC,'preview', d.out.replace('.webp','.png')));
   }
 
   console.log('DONE');

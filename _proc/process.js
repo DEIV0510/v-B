@@ -54,20 +54,6 @@ async function run() {
     await sharp(p(SRC,products[i])).sharpen({sigma:0.6}).webp({quality:96, effort:6}).toFile(p(OUT,'product',productNames[i]));
   }
 
-  // ---------- MODEL crops (remove baked-in text zones), wider where safe + sharpened upscale ----------
-  const crops = [
-    {file:'info.png',  out:'athlete-black-gym.webp',   left:235, top:0,  width:350, height:655, outW:760},
-    {file:'info2.png', out:'athlete-merlot-gym.webp',  left:233, top:0,  width:349, height:647, outW:760},
-    {file:'info3.png', out:'athlete-white-gym.webp',   left:235, top:0,  width:347, height:647, outW:700},
-    {file:'info4.png', out:'athlete-black-outdoor.webp', left:340, top:0, width:277, height:782, outW:700},
-    {file:'info5.png', out:'athlete-white-walk.webp', left:270, top:35, width:242, height:615, outW:700},
-  ];
-  for (const c of crops){
-    const img = sharp(p(SRC,c.file)).extract({left:c.left, top:c.top, width:c.width, height:c.height});
-    await img.clone().resize({width: c.outW, kernel:'lanczos3'}).sharpen({sigma:1.1, m1:0.8, m2:0.4}).webp({quality:94, effort:6}).toFile(p(OUT,'model', c.out));
-    await img.clone().resize({width: Math.min(c.outW, 700), kernel:'lanczos3'}).sharpen({sigma:1.1, m1:0.8, m2:0.4}).png().toFile(p(PROC,'preview', c.out.replace('.webp','.png')));
-  }
-
   // ---------- Detail crops (fabric + chest logo close-up) for feature/editorial sections ----------
   const details = [
     {file:'camisa.png',  out:'detail-black.webp',  left:120, top:140, width:340, height:420},
@@ -78,6 +64,17 @@ async function run() {
     const img = sharp(p(SRC,d.file)).extract({left:d.left, top:d.top, width:d.width, height:d.height});
     await img.clone().resize({width: Math.round(d.width*1.8), kernel:'lanczos3'}).sharpen({sigma:0.9}).webp({quality:95, effort:6}).toFile(p(OUT,'product', d.out));
     await img.clone().resize({width: Math.min(Math.round(d.width*1.8),650), kernel:'lanczos3'}).sharpen({sigma:0.9}).png().toFile(p(PROC,'preview', d.out.replace('.webp','.png')));
+  }
+
+  // ---------- LICRA compression long-sleeve (ghost-mannequin renders, black bg matches theme) ----------
+  const licras = [
+    {file:'licranegra.png',  out:'licra-black.webp'},
+    {file:'licrablanca.png', out:'licra-white.webp'},
+    {file:'licragris.png',   out:'licra-gray.webp'},
+  ];
+  for (const l of licras){
+    const trimmed = await sharp(p(SRC,l.file)).trim({background:{r:0,g:0,b:0}, threshold:12}).toBuffer();
+    await sharp(trimmed).resize({width:900, kernel:'lanczos3'}).sharpen({sigma:0.6}).webp({quality:90, effort:6}).toFile(p(OUT,'product', l.out));
   }
 
   console.log('DONE');

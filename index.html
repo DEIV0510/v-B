@@ -19,11 +19,21 @@
 <body>
 
 <!-- ===== PANTALLA DE CARGA ===== -->
-<div id="loader" class="loader" aria-hidden="true">
-  <div class="loader__mark">
-    <img src="assets/img/brand/logo-mark-lg.webp" alt="" width="480" height="249">
+<div id="loader" class="loader" aria-hidden="true" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Cargando V&amp;B Performance Apparel">
+  <span class="loader__panel loader__panel--l"></span>
+  <span class="loader__panel loader__panel--r"></span>
+
+  <div class="loader__content">
+    <div class="loader__mark">
+      <img src="assets/img/brand/logo-mark-lg.webp" alt="" width="480" height="249">
+    </div>
+    <p class="loader__tag">PERFORMANCE APPAREL</p>
+    <div class="loader__meter">
+      <span class="loader__digits" id="loaderDigits">00</span>
+      <div class="loader__track"><span class="loader__fill" id="loaderFill"></span></div>
+      <span class="loader__pct">%</span>
+    </div>
   </div>
-  <div class="loader__bar"><span></span></div>
 </div>
 
 <!-- ===== HEADER ===== -->
@@ -57,7 +67,7 @@
   <div class="search-panel" id="searchPanel">
     <div class="search-panel__row">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar TANK BLACK, WHITE, MERLOT…" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Buscar TANK o LICRA…" autocomplete="off">
       <button id="searchClose" aria-label="Cerrar búsqueda">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
       </button>
@@ -73,8 +83,10 @@
 
 <!-- ===== HERO ===== -->
 <section class="hero" id="inicio">
-  <div class="hero__media">
-    <img src="assets/img/model/athlete-black-gym.webp" alt="Atleta entrenando con camiseta tank V&amp;B Performance Apparel en color negro" width="760" height="1422" fetchpriority="high">
+  <div class="hero__media figure">
+    <span class="figure__ghost" aria-hidden="true">V&amp;B</span>
+    <span class="figure__glow" aria-hidden="true"></span>
+    <img class="figure__cutout" src="assets/img/model/cutout-black.webp" alt="Atleta con camiseta tank V&amp;B Performance Apparel en color negro" width="856" height="1438" fetchpriority="high">
     <div class="hero__media-fade" aria-hidden="true"></div>
   </div>
 
@@ -139,8 +151,8 @@
       <figcaption><span>01</span>Tela premium de secado rápido</figcaption>
     </figure>
     <figure class="bento__item bento__item--b">
-      <img src="assets/img/model/athlete-white-gym.webp" alt="Atleta usando camiseta tank V&amp;B blanca en zona de entrenamiento" width="700" height="1305" loading="lazy" decoding="async">
-      <figcaption><span>02</span>Hecho para el entrenamiento</figcaption>
+      <img src="assets/img/product/detail-white.webp" alt="Costura y logo V&amp;B en tela premium de secado rápido, camiseta tank blanca" width="612" height="756" loading="lazy" decoding="async">
+      <figcaption><span>02</span>Ajuste anatómico premium</figcaption>
     </figure>
     <figure class="bento__item bento__item--c">
       <img src="assets/img/product/detail-merlot.webp" alt="Detalle de etiqueta técnica y costura en camiseta tank V&amp;B color merlot" width="612" height="756" loading="lazy" decoding="async">
@@ -256,10 +268,113 @@
   </div>
 </section>
 
+<!-- ===== NUEVO DROP: LICRA DE COMPRESIÓN ===== -->
+<section class="shop shop--licra" id="licra">
+  <div class="shop__head">
+    <p class="eyebrow reveal">NUEVO DROP</p>
+    <h2 class="section-title reveal">
+      <span class="line">MISMA MENTALIDAD.</span>
+      <span class="line accent">NUEVO NIVEL.</span>
+    </h2>
+    <p class="shop__lede reveal">Licra de compresión manga larga. Disciplina, enfoque y resultados en cada capa.</p>
+  </div>
+
+  <ul class="features features--compact reveal">
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z" stroke-linejoin="round"/></svg>
+      <span>Tela premium</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 12h16" stroke-linecap="round"/><path d="M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Alta elasticidad</span>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3c3.5 4.2 6 7.8 6 11a6 6 0 1 1-12 0c0-3.2 2.5-6.8 6-11Z" stroke-linejoin="round"/></svg>
+      <span>Secado rápido</span>
+    </li>
+  </ul>
+
+  <div class="shop__grid">
+
+    <article class="product-card reveal" data-name="LICRA BLACK" id="card-licra-black">
+      <div class="product-card__media product-card__media--contain">
+        <img src="assets/img/product/licra-black.webp" alt="Licra de compresión V&amp;B manga larga color negro" width="900" height="917" loading="lazy" decoding="async">
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__row">
+          <h3>LICRA BLACK</h3>
+          <span class="swatch swatch--black" aria-hidden="true"></span>
+        </div>
+        <p class="product-card__price">$59.900</p>
+        <div class="size-picker" role="group" aria-label="Talla — Licra Black">
+          <button type="button" class="size-pill">S</button>
+          <button type="button" class="size-pill is-active">M</button>
+          <button type="button" class="size-pill">L</button>
+          <button type="button" class="size-pill">XL</button>
+        </div>
+        <button type="button" class="btn btn--buy" data-add-cart data-id="licra-black" data-name="LICRA BLACK" data-price="59900" data-img="assets/img/product/licra-black.webp">
+          <span>Comprar ahora</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+    <article class="product-card product-card--light reveal" data-name="LICRA WHITE" id="card-licra-white">
+      <div class="product-card__media product-card__media--contain">
+        <img src="assets/img/product/licra-white.webp" alt="Licra de compresión V&amp;B manga larga color blanco" width="900" height="924" loading="lazy" decoding="async">
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__row">
+          <h3>LICRA WHITE</h3>
+          <span class="swatch swatch--white" aria-hidden="true"></span>
+        </div>
+        <p class="product-card__price">$59.900</p>
+        <div class="size-picker" role="group" aria-label="Talla — Licra White">
+          <button type="button" class="size-pill">S</button>
+          <button type="button" class="size-pill is-active">M</button>
+          <button type="button" class="size-pill">L</button>
+          <button type="button" class="size-pill">XL</button>
+        </div>
+        <button type="button" class="btn btn--buy" data-add-cart data-id="licra-white" data-name="LICRA WHITE" data-price="59900" data-img="assets/img/product/licra-white.webp">
+          <span>Comprar ahora</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+    <article class="product-card reveal" data-name="LICRA GRAY" id="card-licra-gray">
+      <div class="product-card__media product-card__media--contain">
+        <img src="assets/img/product/licra-gray.webp" alt="Licra de compresión V&amp;B manga larga color gris" width="900" height="921" loading="lazy" decoding="async">
+      </div>
+      <div class="product-card__body">
+        <div class="product-card__row">
+          <h3>LICRA GRAY</h3>
+          <span class="swatch swatch--gray" aria-hidden="true"></span>
+        </div>
+        <p class="product-card__price">$59.900</p>
+        <div class="size-picker" role="group" aria-label="Talla — Licra Gray">
+          <button type="button" class="size-pill">S</button>
+          <button type="button" class="size-pill is-active">M</button>
+          <button type="button" class="size-pill">L</button>
+          <button type="button" class="size-pill">XL</button>
+        </div>
+        <button type="button" class="btn btn--buy" data-add-cart data-id="licra-gray" data-name="LICRA GRAY" data-price="59900" data-img="assets/img/product/licra-gray.webp">
+          <span>Comprar ahora</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
 <!-- ===== SECCIÓN INMERSIVA ===== -->
 <section class="immersive grain">
-  <img src="assets/img/model/athlete-white-walk.webp" alt="Atleta caminando al aire libre con camiseta tank V&amp;B blanca" width="700" height="1779" loading="lazy" decoding="async">
-  <div class="immersive__scrim" aria-hidden="true"></div>
+  <div class="immersive__figure figure reveal">
+    <span class="figure__ghost" aria-hidden="true">03</span>
+    <span class="figure__glow" aria-hidden="true"></span>
+    <img class="figure__cutout" src="assets/img/model/cutout-seated.webp" alt="Atleta con camiseta tank V&amp;B negra en un momento de descanso, fuera del entrenamiento" width="1082" height="1400" loading="lazy" decoding="async">
+  </div>
 
   <div class="immersive__mark reveal">
     <span>V&amp;B</span>
@@ -267,8 +382,23 @@
   </div>
 
   <div class="immersive__quote reveal">
-    <p class="immersive__italic">"Más que ropa deportiva."</p>
-    <p class="immersive__strong">HECHO PARA <span class="accent">RENDIR.</span></p>
+    <p class="eyebrow">MÁS ALLÁ DEL ENTRENAMIENTO</p>
+    <h2 class="immersive__strong">
+      <span class="line">NO ES SOLO</span>
+      <span class="line">PARA ENTRENAR<span class="dot">.</span></span>
+    </h2>
+    <p class="immersive__text">Diseñado para acompañarte en tu día a día. Comodidad, estilo y rendimiento en cualquier plan.</p>
+
+    <ul class="trust-row">
+      <li>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-1.3-.6-2.1-1.1-3-2.5-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4-.1-.1-.5-1.3-.7-1.7-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.6 2.5 3.9 3.5.5.2.9.4 1.3.5.5.2 1 .1 1.3-.1.4-.2 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>
+        <span>Escríbenos por WhatsApp</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h11v10H2z" stroke-linejoin="round"/><path d="M13 10h4l4 3.2V17h-8z" stroke-linejoin="round"/><circle cx="6" cy="18.5" r="1.6"/><circle cx="16.5" cy="18.5" r="1.6"/></svg>
+        <span>Envíos a todo Colombia</span>
+      </li>
+    </ul>
   </div>
 
   <div class="immersive__index" aria-hidden="true">
@@ -279,8 +409,10 @@
 
 <!-- ===== BENEFICIOS / NOSOTROS ===== -->
 <section class="about" id="nosotros">
-  <div class="about__media reveal">
-    <img src="assets/img/model/athlete-merlot-gym.webp" alt="Atleta entrenando con camiseta tank V&amp;B merlot en el gimnasio" width="760" height="1409" loading="lazy" decoding="async">
+  <div class="about__media figure reveal">
+    <span class="figure__ghost" aria-hidden="true">02</span>
+    <span class="figure__glow" aria-hidden="true"></span>
+    <img class="figure__cutout" src="assets/img/model/cutout-merlot.webp" alt="Atleta con camiseta tank V&amp;B color merlot" width="857" height="1437" loading="lazy" decoding="async">
   </div>
   <div class="about__content">
     <p class="eyebrow reveal">NOSOTROS</p>
@@ -315,7 +447,11 @@
 
 <!-- ===== CTA FINAL ===== -->
 <section class="final-cta grain">
-  <img src="assets/img/model/athlete-black-outdoor.webp" alt="Atleta con camiseta tank V&amp;B negra, actitud de rendimiento" width="700" height="1976" loading="lazy" decoding="async">
+  <div class="final-cta__figure figure">
+    <span class="figure__ghost" aria-hidden="true">04</span>
+    <span class="figure__glow" aria-hidden="true"></span>
+    <img class="figure__cutout" src="assets/img/model/cutout-white.webp" alt="Atleta con camiseta tank V&amp;B blanca, actitud de rendimiento" width="854" height="1431" loading="lazy" decoding="async">
+  </div>
   <div class="final-cta__scrim" aria-hidden="true"></div>
   <div class="final-cta__content reveal">
     <h2 class="final-cta__title">

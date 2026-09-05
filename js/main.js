@@ -10,15 +10,41 @@
      LOADER
   --------------------------------------------------------- */
   var loader = document.getElementById('loader');
-  function hideLoader(){
-    if (!loader) return;
-    loader.classList.add('is-hidden');
-    window.setTimeout(function(){ if (loader && loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
+  var loaderFill = document.getElementById('loaderFill');
+  var loaderDigits = document.getElementById('loaderDigits');
+  var loaderProgress = 0;
+  var loaderDone = false;
+
+  function setLoaderProgress(v){
+    loaderProgress = v;
+    if (loaderFill) loaderFill.style.transform = 'scaleX(' + (v / 100) + ')';
+    if (loaderDigits) loaderDigits.textContent = (v < 10 ? '0' : '') + Math.round(v);
+    if (loader) loader.setAttribute('aria-valuenow', String(Math.round(v)));
   }
-  var loaderTimer = window.setTimeout(hideLoader, reducedMotion ? 0 : 900);
+
+  function hideLoader(){
+    if (!loader || loaderDone) return;
+    loaderDone = true;
+    setLoaderProgress(100);
+    window.setTimeout(function(){
+      loader.classList.add('is-hidden');
+      window.setTimeout(function(){ if (loader && loader.parentNode) loader.parentNode.removeChild(loader); }, 900);
+    }, reducedMotion ? 0 : 260);
+  }
+
+  if (loader && !reducedMotion){
+    var loaderTick = window.setInterval(function(){
+      if (loaderDone){ window.clearInterval(loaderTick); return; }
+      setLoaderProgress(Math.min(loaderProgress + (100 - loaderProgress) * 0.16 + 1, 92));
+    }, 90);
+  } else if (loader){
+    setLoaderProgress(100);
+  }
+
+  var loaderTimer = window.setTimeout(hideLoader, reducedMotion ? 0 : 1600);
   window.addEventListener('load', function(){
     window.clearTimeout(loaderTimer);
-    window.setTimeout(hideLoader, reducedMotion ? 0 : 350);
+    window.setTimeout(hideLoader, reducedMotion ? 0 : 320);
   });
 
   /* ---------------------------------------------------------
@@ -79,7 +105,10 @@
   var PRODUCTS = [
     { id: 'tank-black', name: 'TANK BLACK', selector: '#card-black' },
     { id: 'tank-white', name: 'TANK WHITE', selector: '#card-white' },
-    { id: 'tank-merlot', name: 'TANK MERLOT', selector: '#card-merlot' }
+    { id: 'tank-merlot', name: 'TANK MERLOT', selector: '#card-merlot' },
+    { id: 'licra-black', name: 'LICRA BLACK', selector: '#card-licra-black' },
+    { id: 'licra-white', name: 'LICRA WHITE', selector: '#card-licra-white' },
+    { id: 'licra-gray', name: 'LICRA GRAY', selector: '#card-licra-gray' }
   ];
 
   function openSearch(){
@@ -105,7 +134,7 @@
       var q = searchInput.value.trim().toUpperCase();
       if (!q){ searchHint.textContent = ''; return; }
       var match = PRODUCTS.find(function(p){ return p.name.indexOf(q) !== -1 || p.id.toUpperCase().indexOf(q) !== -1; });
-      searchHint.textContent = match ? ('Pulsa Enter para ver ' + match.name) : 'Sin resultados. Prueba "BLACK", "WHITE" o "MERLOT".';
+      searchHint.textContent = match ? ('Pulsa Enter para ver ' + match.name) : 'Sin resultados. Prueba "TANK" o "LICRA".';
     });
     searchInput.addEventListener('keydown', function(e){
       if (e.key !== 'Enter') return;

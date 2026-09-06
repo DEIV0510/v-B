@@ -386,8 +386,8 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   font-size: clamp(100px, 30vw, 360px);
   line-height: 1;
   letter-spacing: -.02em;
-  color: rgba(255,255,255,.035);
-  -webkit-text-stroke: 1px rgba(255,255,255,.05);
+  color: rgba(255,255,255,.055);
+  -webkit-text-stroke: 1px rgba(255,255,255,.09);
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
@@ -400,8 +400,26 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   transform: translateX(-50%);
   background: radial-gradient(closest-side, var(--c-wine-glow), transparent 72%);
   filter: blur(14px);
-  opacity: .5;
+  opacity: .62;
   z-index: 0;
+}
+.figure::after{
+  content: '';
+  position: absolute; inset: 18px;
+  z-index: 2;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)), linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)),
+    linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)), linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)),
+    linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)), linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)),
+    linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22)), linear-gradient(rgba(255,255,255,.22), rgba(255,255,255,.22));
+  background-size: 22px 1px, 1px 22px, 22px 1px, 1px 22px, 22px 1px, 1px 22px, 22px 1px, 1px 22px;
+  background-position:
+    top left, top left,
+    top right, top right,
+    bottom left, bottom left,
+    bottom right, bottom right;
 }
 .figure__cutout{
   position: relative;
@@ -727,7 +745,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .immersive{
   position: relative;
   overflow: hidden;
-  background: var(--c-carbon);
+  background: var(--c-void);
   display: flex;
   flex-direction: column;
 }

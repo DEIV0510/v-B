@@ -28,8 +28,8 @@
     setLoaderProgress(100);
     window.setTimeout(function(){
       loader.classList.add('is-hidden');
-      window.setTimeout(function(){ if (loader && loader.parentNode) loader.parentNode.removeChild(loader); }, 900);
-    }, reducedMotion ? 0 : 260);
+      window.setTimeout(function(){ if (loader && loader.parentNode) loader.parentNode.removeChild(loader); }, reducedMotion ? 50 : 900);
+    }, reducedMotion ? 300 : 260);
   }
 
   if (loader && !reducedMotion){
@@ -41,10 +41,10 @@
     setLoaderProgress(100);
   }
 
-  var loaderTimer = window.setTimeout(hideLoader, reducedMotion ? 0 : 1600);
+  var loaderTimer = window.setTimeout(hideLoader, reducedMotion ? 550 : 1600);
   window.addEventListener('load', function(){
     window.clearTimeout(loaderTimer);
-    window.setTimeout(hideLoader, reducedMotion ? 0 : 320);
+    window.setTimeout(hideLoader, reducedMotion ? 450 : 320);
   });
 
   /* ---------------------------------------------------------

@@ -486,6 +486,8 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   .hero{
     grid-template-columns: minmax(0,1fr) minmax(0, min(50vw, 700px));
     align-items: stretch;
+    max-width: 1460px;
+    margin-inline: auto;
   }
   .hero__media{ grid-row: 1; grid-column: 2; height: 100%; padding-top: 0; }
   .hero__media-fade{
@@ -495,7 +497,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
     grid-row: 1; grid-column: 1;
     justify-content: center;
     padding: var(--header-h) clamp(40px,6vw,90px) 64px clamp(40px,6vw,90px);
-    max-width: 640px;
+    max-width: 680px;
   }
   .hero__cta .btn{ flex: 0 0 auto; }
 
@@ -816,6 +818,8 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
     grid-template-columns: minmax(0,1fr) minmax(0, min(46vw, 620px));
     align-items: stretch;
     min-height: 82vh;
+    max-width: 1400px;
+    margin-inline: auto;
   }
   .immersive__figure{
     grid-column: 2; grid-row: 1;
@@ -825,7 +829,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
     grid-column: 1; grid-row: 1;
     align-self: center;
     padding: var(--header-h) clamp(40px,6vw,90px) 40px;
-    max-width: 560px;
+    max-width: 620px;
   }
 }
 
@@ -855,9 +859,17 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .benefits p{ font-size: 14px; color: var(--c-grey-dim); max-width: 42ch; }
 
 @media (min-width: 900px){
-  .about{ grid-template-columns: minmax(0, min(50vw, 700px)) minmax(0,1fr); align-items: stretch; }
+  .about{
+    grid-template-columns: minmax(0, min(50vw, 700px)) minmax(0,1fr);
+    align-items: stretch;
+    max-width: 1500px;
+    margin-inline: auto;
+  }
   .about__media{ height: auto; border-right: 1px solid var(--line); }
-  .about__content{ padding: 70px clamp(40px,6vw,90px); display: flex; flex-direction: column; justify-content: center; }
+  .about__content{
+    padding: 70px clamp(40px,6vw,90px);
+    display: flex; flex-direction: column; justify-content: center;
+  }
 }
 
 /* =========================================================
@@ -868,6 +880,8 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   min-height: 92vh;
   overflow: hidden;
   background: var(--c-void);
+  max-width: 1180px;
+  margin-inline: auto;
 }
 .final-cta__figure{
   position: absolute; inset: 0;

@@ -186,12 +186,34 @@
     catch (e) { return '$' + n; }
   }
 
+  var SHIPPING_COST = 13000;
+  var LICRA_BUNDLE_QTY = 3;
+  var LICRA_BUNDLE_PRICE = 169900;
+
+  function computeTotals(){
+    var subtotal = 0, licraQty = 0, licraUnitPrice = 69900;
+    cartState.items.forEach(function(i){
+      subtotal += i.price * i.qty;
+      if (i.id.indexOf('licra-') === 0){ licraQty += i.qty; licraUnitPrice = i.price; }
+    });
+    var bundles = Math.floor(licraQty / LICRA_BUNDLE_QTY);
+    var discount = bundles > 0 ? bundles * (LICRA_BUNDLE_QTY * licraUnitPrice - LICRA_BUNDLE_PRICE) : 0;
+    var shipping = cartState.items.length ? SHIPPING_COST : 0;
+    var total = subtotal - discount + shipping;
+    return { subtotal: subtotal, discount: discount, bundles: bundles, shipping: shipping, total: total };
+  }
+
   var cartToggle = document.getElementById('cartToggle');
   var cart = document.getElementById('cart');
   var cartOverlay = document.getElementById('cartOverlay');
   var cartClose = document.getElementById('cartClose');
   var cartItemsEl = document.getElementById('cartItems');
   var cartEmptyEl = document.getElementById('cartEmpty');
+  var cartSubtotalEl = document.getElementById('cartSubtotal');
+  var cartDiscountRowEl = document.getElementById('cartDiscountRow');
+  var cartDiscountEl = document.getElementById('cartDiscount');
+  var cartShippingRowEl = document.getElementById('cartShippingRow');
+  var cartShippingEl = document.getElementById('cartShipping');
   var cartTotalEl = document.getElementById('cartTotal');
   var cartCountEl = document.getElementById('cartCount');
   var cartCheckoutBtn = document.getElementById('cartCheckout');
@@ -259,9 +281,22 @@
       });
     }
 
-    var total = cartState.items.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
+    var t = computeTotals();
     var count = cartState.items.reduce(function(sum, i){ return sum + i.qty; }, 0);
-    cartTotalEl.textContent = formatCOP(total);
+    cartSubtotalEl.textContent = formatCOP(t.subtotal);
+    if (t.discount > 0){
+      cartDiscountRowEl.hidden = false;
+      cartDiscountEl.textContent = '-' + formatCOP(t.discount);
+    } else {
+      cartDiscountRowEl.hidden = true;
+    }
+    if (cartState.items.length){
+      cartShippingRowEl.hidden = false;
+      cartShippingEl.textContent = formatCOP(t.shipping);
+    } else {
+      cartShippingRowEl.hidden = true;
+    }
+    cartTotalEl.textContent = formatCOP(t.total);
     if (count > 0){ cartCountEl.hidden = false; cartCountEl.textContent = String(count); }
     else { cartCountEl.hidden = true; }
 
@@ -312,11 +347,20 @@
   if (cartCheckoutBtn){
     cartCheckoutBtn.addEventListener('click', function(){
       if (!cartState.items.length) return;
+      var t = computeTotals();
       var lines = cartState.items.map(function(i){
         return '• ' + i.name + ' (talla ' + i.size + ') x' + i.qty + ' — ' + formatCOP(i.price * i.qty);
       });
-      var total = cartState.items.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
-      var text = 'Hola V&B, quiero hacer este pedido:%0A%0A' + encodeURIComponent(lines.join('\n')) + '%0A%0ATotal: ' + encodeURIComponent(formatCOP(total));
+      var summary = [
+        '',
+        'Subtotal: ' + formatCOP(t.subtotal)
+      ];
+      if (t.discount > 0) summary.push('Descuento combo licra (' + t.bundles + 'x3): -' + formatCOP(t.discount));
+      summary.push('Envío: ' + formatCOP(t.shipping));
+      summary.push('Total: ' + formatCOP(t.total));
+      var text = 'Hola V&B, quiero hacer este pedido:%0A%0A'
+        + encodeURIComponent(lines.join('\n'))
+        + '%0A' + encodeURIComponent(summary.join('\n'));
       if (WHATSAPP_NUMBER){
         window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + text, '_blank', 'noopener');
       } else {

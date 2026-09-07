@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Status {
+  active
+  inactive
+}
+
+enum MediaVariant {
+  cover
+  contain
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  auditLogs AuditLog[]
+}
+
+model Media {
+  id         String   @id @default(cuid())
+  url        String
+  pathname   String
+  filename   String
+  altText    String   @default("")
+  width      Int?
+  height     Int?
+  sizeBytes  Int?
+  createdAt  DateTime @default(now())
+
+  products         Product[]         @relation("ProductMainImage")
+  productImages    ProductImage[]
+  collections      Collection[]
+  homeSectionImages HomeSectionImage[]
+  banners          Banner[]
+  seoSettings      SeoSettings[]
+  logoFor          SiteSettings[]    @relation("SiteLogo")
+  faviconFor       SiteSettings[]    @relation("SiteFavicon")
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String   @default("")
+  imageId     String?
+  image       Media?   @relation(fields: [imageId], references: [id])
+  status      Status   @default(active)
+  sortOrder   Int      @default(0)
+
+  // combo/bundle promo (solo la coleccion de licras la usa hoy)
+  bundleQty   Int?
+  bundlePrice Int?
+
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id               String       @id @default(cuid())
+  slug             String       @unique
+  name             String
+  price            Int
+  compareAtPrice   Int?
+  shortDescription String       @default("")
+  description      String       @default("")
+  sku              String       @default("")
+  color            String       @default("")
+  colors           Json?
+  sizes            Json         @default("[\"S\",\"M\",\"L\",\"XL\"]")
+  stock            Int          @default(0)
+
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id])
+
+  mediaVariant MediaVariant @default(cover)
+
+  mainImageId String?
+  mainImage   Media?  @relation("ProductMainImage", fields: [mainImageId], references: [id])
+  images      ProductImage[]
+
+  status     Status  @default(active)
+  isFeatured Boolean @default(false)
+  isNew      Boolean @default(false)
+  isSoldout  Boolean @default(false)
+  sortOrder  Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaId   String
+  media     Media   @relation(fields: [mediaId], references: [id])
+  sortOrder Int     @default(0)
+}
+
+model HomeSection {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  title     String   @default("")
+  subtitle  String   @default("")
+  body      String   @default("")
+  ctaLabel  String   @default("")
+  ctaUrl    String   @default("")
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  images    HomeSectionImage[]
+  updatedAt DateTime @updatedAt
+}
+
+model HomeSectionImage {
+  id            String      @id @default(cuid())
+  homeSectionId String
+  homeSection   HomeSection @relation(fields: [homeSectionId], references: [id], onDelete: Cascade)
+  mediaId       String
+  media         Media       @relation(fields: [mediaId], references: [id])
+  sortOrder     Int         @default(0)
+}
+
+model Banner {
+  id        String    @id @default(cuid())
+  imageId   String?
+  image     Media?    @relation(fields: [imageId], references: [id])
+  title     String    @default("")
+  subtitle  String    @default("")
+  ctaLabel  String    @default("")
+  ctaUrl    String    @default("")
+  status    Status    @default(inactive)
+  sortOrder Int       @default(0)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model SiteSettings {
+  id                    String  @id @default("singleton")
+  storeName             String  @default("V&B Performance Apparel")
+  logoMediaId           String?
+  logoMedia             Media?  @relation("SiteLogo", fields: [logoMediaId], references: [id])
+  faviconMediaId        String?
+  faviconMedia          Media?  @relation("SiteFavicon", fields: [faviconMediaId], references: [id])
+  whatsappNumber        String  @default("")
+  whatsappMessageTemplate String @default("Hola V&B, quiero hacer este pedido:")
+  instagramUrl          String  @default("")
+  tiktokUrl             String  @default("")
+  facebookUrl           String  @default("")
+  email                 String  @default("")
+  address               String  @default("")
+  hours                 String  @default("")
+  shippingCost          Int     @default(13000)
+  updatedAt             DateTime @updatedAt
+}
+
+model SeoSettings {
+  id              String  @id @default(cuid())
+  page            String  @unique
+  title           String  @default("")
+  metaDescription String  @default("")
+  ogTitle         String  @default("")
+  ogDescription   String  @default("")
+  ogImageId       String?
+  ogImage         Media?  @relation(fields: [ogImageId], references: [id])
+  canonicalUrl    String  @default("")
+  updatedAt       DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+  action      String
+  entityType  String
+  entityId    String
+  summary     String
+  createdAt   DateTime  @default(now())
+}

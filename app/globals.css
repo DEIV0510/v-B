@@ -17,8 +17,8 @@
   --line: rgba(255,255,255,.12);
   --line-soft: rgba(255,255,255,.07);
 
-  --ff-display: 'Anton', 'Arial Narrow', sans-serif;
-  --ff-body: 'Inter', -apple-system, sans-serif;
+  --ff-display: var(--font-anton), 'Arial Narrow', sans-serif;
+  --ff-body: var(--font-inter), -apple-system, sans-serif;
 
   --container: 1360px;
   --gutter: clamp(20px, 5vw, 64px);
@@ -1001,6 +1001,36 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .cart__total{ display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 16px; padding-top: 12px; border-top: 1px solid var(--line-soft); }
 .cart__total span{ font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--c-grey-dim); }
 .cart__total strong{ font-size: 22px; }
+
+/* =========================================================
+   PRODUCT DETAIL (/producto/[slug]) — pagina nueva, reutiliza
+   los mismos tokens/clases (btn, swatch, size-picker, eyebrow)
+   ========================================================= */
+.product-detail{
+  padding: calc(var(--header-h) + 32px) var(--gutter) 90px;
+  max-width: var(--container); margin: 0 auto;
+  display: grid; gap: 40px;
+  background: var(--c-void);
+}
+.product-detail__gallery{ background: var(--c-charcoal); }
+.product-detail__main{ width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
+.product-detail__thumbs{ display: flex; gap: 10px; margin-top: 10px; }
+.product-detail__thumbs img{ width: 72px; height: 90px; object-fit: cover; border: 1px solid var(--line); }
+.product-detail__info{ display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.product-detail__row{ display: flex; align-items: center; gap: 14px; }
+.product-detail__title{
+  font-family: var(--ff-display); text-transform: uppercase; font-weight: 400;
+  font-size: clamp(30px, 5vw, 44px); line-height: 1;
+}
+.product-detail__price{ font-size: 26px; font-weight: 700; display: flex; align-items: baseline; gap: 12px; }
+.product-detail__compare{ font-size: 15px; font-weight: 600; color: var(--c-grey-dim2); text-decoration: line-through; }
+.product-detail__desc{ color: var(--c-grey-dim); font-size: 15px; max-width: 52ch; }
+.product-detail__back{ margin-top: 8px; }
+
+@media (min-width: 780px){
+  .product-detail{ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .product-detail__main{ aspect-ratio: 4/5; }
+}
 
 /* =========================================================
    MISC

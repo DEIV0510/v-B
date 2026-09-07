@@ -1,9 +1,33 @@
 {
   "name": "vb-performance",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "V&B Performance Apparel - landing premium de ropa deportiva",
+  "description": "V&B Performance Apparel - tienda con CMS administrativo (Next.js + Prisma + Auth.js)",
   "scripts": {
-    "dev": "node serve.js"
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "@vercel/blob": "^0.27.1",
+    "bcryptjs": "^2.4.3",
+    "next": "14.2.15",
+    "next-auth": "5.0.0-beta.22",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.16.10",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "prisma": "^5.20.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
   }
 }

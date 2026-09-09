@@ -40,7 +40,7 @@ export async function getSiteSettingsPublic() {
       email: '',
       address: '',
       hours: '',
-      shippingCost: 13000
+      shippingCost: 14900
     }
   );
 }

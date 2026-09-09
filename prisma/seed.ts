@@ -115,7 +115,7 @@ async function main() {
     });
   }
 
-  // ---------- 5. Home sections (8 fijas) ----------
+  // ---------- 5. Home sections (9: las 8 originales + testimonios) ----------
   type SeedSection = {
     key: string;
     sortOrder: number;
@@ -125,6 +125,7 @@ async function main() {
     ctaLabel?: string;
     ctaUrl?: string;
     imageIds: string[];
+    isActive?: boolean;
   };
 
   const sections: SeedSection[] = [
@@ -187,8 +188,19 @@ async function main() {
       imageIds: [media.tankBlack.id, media.tankMerlot.id, media.tankWhite.id, media.licraBlack.id]
     },
     {
-      key: 'final_cta',
+      key: 'testimonials',
       sortOrder: 7,
+      subtitle: '',
+      title: '',
+      body: '',
+      imageIds: [],
+      // Oculta por defecto: el número de clientes y las capturas de testimonios
+      // son datos reales que el admin debe cargar él mismo (nada inventado aquí).
+      isActive: false
+    },
+    {
+      key: 'final_cta',
+      sortOrder: 8,
       subtitle: '',
       title: 'HECHO\nPARA\nRENDIR.',
       body: '',
@@ -208,7 +220,7 @@ async function main() {
         body: s.body,
         ctaLabel: s.ctaLabel ?? '',
         ctaUrl: s.ctaUrl ?? '',
-        isActive: true,
+        isActive: s.isActive ?? true,
         sortOrder: s.sortOrder
       },
       update: {}
@@ -235,7 +247,9 @@ async function main() {
       instagramUrl: '',
       tiktokUrl: '',
       facebookUrl: '',
-      shippingCost: 13000
+      shippingCost: 14900,
+      trustBadgeEnabled: false,
+      trustBadgeBaseCount: 0
     },
     update: {}
   });

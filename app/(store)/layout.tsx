@@ -5,6 +5,7 @@ import Header from '@/components/store/Header';
 import Footer from '@/components/store/Footer';
 import CartDrawer from '@/components/store/CartDrawer';
 import SiteScript from '@/components/store/SiteScript';
+import VisitorTracker from '@/components/store/VisitorTracker';
 import type { BundleRule } from '@/lib/pricing';
 
 // La tienda lee directo de la base de datos en cada visita — un cambio del
@@ -43,6 +44,8 @@ export default async function StoreLayout({ children }: { children: React.ReactN
       />
 
       <CartDrawer />
+
+      <VisitorTracker />
 
       <SiteScript
         bundleRules={bundleRules}

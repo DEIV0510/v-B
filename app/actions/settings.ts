@@ -18,6 +18,8 @@ export type SiteSettingsInput = {
   address: string;
   hours: string;
   shippingCost: number;
+  trustBadgeEnabled: boolean;
+  trustBadgeBaseCount: number;
 };
 
 export async function getSiteSettings() {

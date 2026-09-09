@@ -71,7 +71,7 @@ async function getSettings() {
   const settings = await db.siteSettings.findUnique({ where: { id: 'singleton' } });
   return (
     settings ?? {
-      shippingCost: 13000,
+      shippingCost: 14900,
       whatsappNumber: '',
       whatsappMessageTemplate: 'Hola V&B, quiero hacer este pedido:'
     }

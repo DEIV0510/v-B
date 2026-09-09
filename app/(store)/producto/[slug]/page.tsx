@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getProductBySlug } from '@/lib/store-data';
+import TiltImage from '@/components/store/TiltImage';
 
 type Props = { params: { slug: string } };
 
@@ -33,13 +34,12 @@ export default async function ProductDetailPage({ params }: Props) {
     <section className="product-detail">
       <div className="product-detail__gallery corner-frame">
         {gallery[0] && (
-          <img
+          <TiltImage
             className="product-detail__main"
             src={gallery[0].url}
             alt={gallery[0].altText}
             width={gallery[0].width ?? undefined}
             height={gallery[0].height ?? undefined}
-            fetchPriority="high"
           />
         )}
         {gallery.length > 1 && (

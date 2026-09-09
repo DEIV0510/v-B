@@ -49,11 +49,11 @@ export default function ShopSection({ section, variant, sectionId, products, bun
           <div className="promo-banner reveal">
             <span className="promo-banner__tag">Promo</span>
             <p className="promo-banner__text">
-              1 unidad <strong>${referencePrice.toLocaleString('es-CO')}</strong>
+              Precio unidad: <strong>${referencePrice.toLocaleString('es-CO')}</strong>
               &nbsp;·&nbsp;
-              {bundleQty} unidades <strong>${bundlePrice!.toLocaleString('es-CO')}</strong>
+              Combo {bundleQty} unidades: <strong>${bundlePrice!.toLocaleString('es-CO')}</strong>
+              <span className="promo-banner__save">&nbsp;(ahorras ${savings.toLocaleString('es-CO')} comprando las {bundleQty})</span>
             </p>
-            <span className="promo-banner__save">Ahorras ${savings.toLocaleString('es-CO')}</span>
           </div>
         )}
       </div>

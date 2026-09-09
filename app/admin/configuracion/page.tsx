@@ -25,8 +25,11 @@ export default async function SettingsPage() {
           email: settings.email,
           address: settings.address,
           hours: settings.hours,
-          shippingCost: settings.shippingCost
+          shippingCost: settings.shippingCost,
+          trustBadgeEnabled: settings.trustBadgeEnabled,
+          trustBadgeBaseCount: settings.trustBadgeBaseCount
         }}
+        visitorCount={settings.visitorCount}
       />
     </>
   );

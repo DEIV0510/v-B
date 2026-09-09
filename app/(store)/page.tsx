@@ -8,6 +8,8 @@ import ShopSection from '@/components/store/sections/ShopSection';
 import Immersive from '@/components/store/sections/Immersive';
 import About from '@/components/store/sections/About';
 import FinalCta from '@/components/store/sections/FinalCta';
+import Testimonials from '@/components/store/sections/Testimonials';
+import { getTrustBadgeCount } from '@/app/actions/track';
 import type { SectionData } from '@/components/store/sections/types';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -44,6 +46,7 @@ export default async function HomePage() {
   });
 
   const [licra, tank] = await Promise.all([getCollectionWithProducts('licra'), getCollectionWithProducts('tank')]);
+  const trustCount = await getTrustBadgeCount();
   const licraProducts = licra?.products.map((p) => ({ ...p, sizes: p.sizes as string[] })) ?? [];
   const tankProducts = tank?.products.map((p) => ({ ...p, sizes: p.sizes as string[] })) ?? [];
 
@@ -78,6 +81,8 @@ export default async function HomePage() {
             return <Immersive key={section.id} section={data} />;
           case 'about':
             return <About key={section.id} section={data} />;
+          case 'testimonials':
+            return <Testimonials key={section.id} section={data} trustCount={trustCount} />;
           case 'final_cta':
             return <FinalCta key={section.id} section={data} />;
           default:

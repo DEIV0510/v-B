@@ -9,6 +9,7 @@ const LABELS: Record<string, string> = {
   shop_tank: 'Tienda — Tank collection',
   immersive: 'Sección inmersiva',
   about: 'Nosotros',
+  testimonials: 'Testimonios / clientes satisfechos',
   final_cta: 'CTA final'
 };
 
@@ -20,7 +21,7 @@ export default async function HomeSectionsPage() {
       <div className="admin__page-head">
         <div>
           <h1>Inicio</h1>
-          <p>Textos, imágenes y orden de las 8 secciones de la página principal.</p>
+          <p>Textos, imágenes y orden de las secciones de la página principal.</p>
         </div>
       </div>
 

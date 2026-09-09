@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { updateSiteSettings, type SiteSettingsInput } from '@/app/actions/settings';
 import MediaPicker from '@/components/admin/MediaPicker';
 
-export default function SettingsForm({ initial }: { initial: SiteSettingsInput }) {
+export default function SettingsForm({ initial, visitorCount }: { initial: SiteSettingsInput; visitorCount: number }) {
   const [form, setForm] = useState(initial);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -52,6 +52,28 @@ export default function SettingsForm({ initial }: { initial: SiteSettingsInput }
         <div className="admin-field">
           <label>Costo de envío (COP)</label>
           <input type="number" min={0} value={form.shippingCost} onChange={(e) => set('shippingCost', Number(e.target.value))} />
+        </div>
+      </fieldset>
+
+      <fieldset className="admin-fieldset">
+        <legend>Clientes satisfechos</legend>
+        <label className="admin-field--row">
+          <input type="checkbox" checked={form.trustBadgeEnabled} onChange={(e) => set('trustBadgeEnabled', e.target.checked)} />
+          Mostrar el contador en la sección de testimonios
+        </label>
+        <div className="admin-field">
+          <label>Número de arranque</label>
+          <input
+            type="number"
+            min={0}
+            value={form.trustBadgeBaseCount}
+            onChange={(e) => set('trustBadgeBaseCount', Number(e.target.value))}
+          />
+          <small>
+            Ponlo solo si tienes un número real de referencia (clientes atendidos, pedidos, etc.). El sitio le suma
+            las visitas reales que ya lleva contadas: <strong>{visitorCount.toLocaleString('es-CO')}</strong>. Total
+            que se muestra ahora mismo: <strong>+{(form.trustBadgeBaseCount + visitorCount).toLocaleString('es-CO')}</strong>.
+          </small>
         </div>
       </fieldset>
 

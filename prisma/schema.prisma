@@ -163,7 +163,16 @@ model SiteSettings {
   email                 String  @default("")
   address               String  @default("")
   hours                 String  @default("")
-  shippingCost          Int     @default(13000)
+  shippingCost          Int     @default(14900)
+
+  // Contador de "clientes satisfechos": trustBadgeBaseCount es un numero de
+  // arranque que pone el admin (no inventado por el sistema); visitorCount
+  // es real, se incrementa una vez por visita desde el navegador. El total
+  // mostrado en el sitio es trustBadgeBaseCount + visitorCount.
+  trustBadgeEnabled     Boolean @default(false)
+  trustBadgeBaseCount   Int     @default(0)
+  visitorCount          Int     @default(0)
+
   updatedAt             DateTime @updatedAt
 }
 

@@ -1,3 +1,5 @@
+import TiltImage from '@/components/store/TiltImage';
+
 type ProductCardData = {
   id: string;
   slug: string;
@@ -32,18 +34,16 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
   return (
     <article className={cardClass} data-name={product.name} id={`card-${product.id}`}>
       {product.isSoldout && <span className="product-card__flag">Agotado</span>}
-      <div className={mediaClass}>
+      <a className={mediaClass} href={`/producto/${product.slug}`} aria-label={`Ver ${product.name}`}>
         {product.mainImage && (
-          <img
+          <TiltImage
             src={product.mainImage.url}
             alt={product.mainImage.altText}
             width={product.mainImage.width ?? undefined}
             height={product.mainImage.height ?? undefined}
-            loading="lazy"
-            decoding="async"
           />
         )}
-      </div>
+      </a>
       <div className="product-card__body">
         <div className="product-card__row">
           <h3><a href={`/producto/${product.slug}`}>{product.name}</a></h3>

@@ -8,6 +8,7 @@ type Props = {
   className?: string;
   width?: number;
   height?: number;
+  priority?: boolean;
 };
 
 const RESET_TRANSFORM = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
@@ -18,7 +19,7 @@ const RESET_TRANSFORM = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(
  * del mouse y agrega un brillo que sigue el cursor, dando sensación de
  * profundidad/premium sin necesitar una sesión de fotos nueva.
  */
-export default function TiltImage({ src, alt, className, width, height }: Props) {
+export default function TiltImage({ src, alt, className, width, height, priority }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState(RESET_TRANSFORM);
   const [glareStyle, setGlareStyle] = useState<CSSProperties>({ opacity: 0 });
@@ -52,7 +53,9 @@ export default function TiltImage({ src, alt, className, width, height }: Props)
         alt={alt}
         width={width}
         height={height}
-        fetchPriority="high"
+        fetchPriority={priority ? 'high' : undefined}
+        loading={priority ? undefined : 'lazy'}
+        decoding={priority ? undefined : 'async'}
         style={{ transform }}
       />
       <span className="tilt-image__glare" style={glareStyle} aria-hidden="true" />

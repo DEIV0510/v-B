@@ -66,3 +66,24 @@ export async function getAllActiveProducts() {
     select: { id: true, slug: true, name: true }
   });
 }
+
+/** Prioriza productos de la misma colección; completa con otros activos si faltan. */
+export async function getRelatedProducts(productId: string, collectionId: string, limit = 4) {
+  const sameCollection = await db.product.findMany({
+    where: { status: 'active', collectionId, id: { not: productId } },
+    include: { mainImage: true },
+    orderBy: { sortOrder: 'asc' },
+    take: limit
+  });
+
+  if (sameCollection.length >= limit) return sameCollection;
+
+  const others = await db.product.findMany({
+    where: { status: 'active', collectionId: { not: collectionId }, id: { not: productId } },
+    include: { mainImage: true },
+    orderBy: { sortOrder: 'asc' },
+    take: limit - sameCollection.length
+  });
+
+  return [...sameCollection, ...others];
+}

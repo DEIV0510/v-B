@@ -90,6 +90,11 @@ model Product {
   mainImage   Media?  @relation("ProductMainImage", fields: [mainImageId], references: [id])
   images      ProductImage[]
 
+  // Visor 360 (opcional, por producto)
+  spinFrames  ProductSpinFrame[]
+  spinEnabled Boolean @default(false)
+  spinReverse Boolean @default(false)
+
   status     Status  @default(active)
   isFeatured Boolean @default(false)
   isNew      Boolean @default(false)
@@ -107,6 +112,26 @@ model ProductImage {
   mediaId   String
   media     Media   @relation(fields: [mediaId], references: [id])
   sortOrder Int     @default(0)
+}
+
+/// Secuencia de fotos del visor 360 de un producto. A proposito NO usa Media:
+/// estos frames nunca se eligen desde MediaPicker ni se reutilizan, y meter
+/// 24-36 filas por producto en Media inflaria listMedia() (que no pagina y se
+/// carga en CADA formulario del panel). Tabla aparte tambien garantiza que el
+/// deleteMany de updateProduct nunca pueda borrar una secuencia por accidente.
+model ProductSpinFrame {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  pathname  String
+  width     Int?
+  height    Int?
+  sizeBytes Int?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId, sortOrder])
 }
 
 model HomeSection {

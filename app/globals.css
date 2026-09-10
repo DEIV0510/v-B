@@ -1091,6 +1091,66 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-detail__thumb img{ width: 100%; height: 100%; object-fit: cover; display: block; }
 .product-detail__thumb:hover{ opacity: .85; }
 .product-detail__thumb.is-active{ opacity: 1; border-color: var(--c-wine-3); }
+
+/* =========================================================
+   VISOR 360 — ver components/store/ProductSpin.tsx
+   ========================================================= */
+/* Los dos paneles (360 y foto) quedan MONTADOS y se alternan por CSS: asi
+   cambiar de vista no reinicia la precarga ni repite el giro automatico.
+   Se usa display:none explicito porque .tilt-image trae display:block de
+   autor y el atributo [hidden] no le ganaria. */
+.product-detail__pane{ position: relative; }
+.product-detail__pane[data-mode="spin"] > .tilt-image{ display: none; }
+.product-detail__pane[data-mode="photo"] > .spin360{ display: none; }
+
+.spin360{
+  position: relative; display: block; width: 100%; height: 100%;
+  overflow: hidden; background: var(--c-charcoal);
+  /* pan-y: los gestos verticales siguen siendo scroll de la pagina, los
+     horizontales son del visor. NUNCA 'none': convertiria media pantalla
+     del movil en una trampa de scroll. */
+  touch-action: pan-y;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  cursor: grab;
+}
+.spin360.is-dragging{ cursor: grabbing; }
+.spin360__frame{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; pointer-events: none;
+}
+/* Sin transition a proposito: un crossfade durante el arrastre se ve como barro. */
+.spin360__frame.is-active{ opacity: 1; }
+
+/* z-index 3 e inset >= 26px: .corner-frame::after es un overlay z-index 2
+   con inset 18px que si no los taparia. */
+.spin360__badge{
+  position: absolute; top: 26px; right: 26px; z-index: 3;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .12em;
+  color: var(--c-white); background: rgba(5,5,5,.72);
+  border: 1px solid var(--line); padding: 5px 9px;
+  pointer-events: none;
+}
+.spin360__hint{
+  position: absolute; left: 50%; bottom: 30px; z-index: 3;
+  transform: translateX(-50%);
+  font-size: 10.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--c-grey); background: rgba(5,5,5,.72);
+  border: 1px solid var(--line); padding: 7px 14px;
+  pointer-events: none; white-space: nowrap;
+}
+.spin360__bar{
+  position: absolute; left: 0; bottom: 0; z-index: 3;
+  height: 2px; background: var(--c-wine-3);
+  transition: width .2s linear; pointer-events: none;
+}
+.product-detail__thumb--spin{ position: relative; }
+.product-detail__thumb--spin span{
+  position: absolute; inset: auto 0 0 0;
+  font-size: 9px; font-weight: 700; letter-spacing: .08em;
+  color: var(--c-white); background: rgba(5,5,5,.78);
+  padding: 3px 0; text-align: center;
+}
 .product-detail__info{ display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .product-detail__row{ display: flex; align-items: center; gap: 14px; }
 .product-detail__title{

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getRelatedProducts } from '@/lib/store-data';
+import { MIN_SPIN_FRAMES } from '@/lib/spin';
 import ProductGallery from '@/components/store/ProductGallery';
 import ProductCard from '@/components/store/ProductCard';
 
@@ -32,6 +33,16 @@ export default async function ProductDetailPage({ params }: Props) {
   const swatchClass = SWATCH_BY_COLOR[product.color.trim().toLowerCase()] ?? '';
   const shopAnchor = product.collection.slug === 'licra' ? '/#productos' : '/#tank';
 
+  const spinFrames = product.spinEnabled ? product.spinFrames : [];
+  const spin =
+    spinFrames.length >= MIN_SPIN_FRAMES
+      ? {
+          frames: spinFrames.map((f) => ({ url: f.url, width: f.width, height: f.height })),
+          alt: product.name,
+          reverse: product.spinReverse
+        }
+      : null;
+
   const related = await getRelatedProducts(product.id, product.collectionId, 4);
 
   return (
@@ -45,7 +56,7 @@ export default async function ProductDetailPage({ params }: Props) {
       </nav>
 
       <section className="product-detail">
-        <ProductGallery images={gallery} />
+        <ProductGallery images={gallery} spin={spin} />
 
         <div className="product-detail__info">
           <p className="eyebrow">{product.collection.name}</p>

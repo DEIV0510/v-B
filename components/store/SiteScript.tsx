@@ -349,8 +349,10 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
 
     const addButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-add-cart]'));
     const onAddClick = (btn: HTMLButtonElement) => () => {
-      const card = btn.closest('.product-card');
-      const activeSize = card?.querySelector('.size-pill.is-active');
+      // .product-card en la home; .product-detail__info en la ficha del producto
+      // (sin este segundo selector la ficha siempre mandaba talla "M").
+      const scope = btn.closest('.product-card, .product-detail__info');
+      const activeSize = scope?.querySelector('.size-pill.is-active');
       addToCart({
         id: btn.getAttribute('data-id') || '',
         name: btn.getAttribute('data-name') || '',

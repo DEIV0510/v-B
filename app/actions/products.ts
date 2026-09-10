@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { del } from '@vercel/blob';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/require-admin';
 import { logAudit } from '@/lib/audit';
@@ -41,7 +42,11 @@ export async function listProducts() {
 export async function getProduct(id: string) {
   return db.product.findUnique({
     where: { id },
-    include: { mainImage: true, images: { include: { media: true }, orderBy: { sortOrder: 'asc' } } }
+    include: {
+      mainImage: true,
+      images: { include: { media: true }, orderBy: { sortOrder: 'asc' } },
+      _count: { select: { spinFrames: true } }
+    }
   });
 }
 
@@ -136,6 +141,16 @@ export async function updateProduct(id: string, input: ProductInput) {
 
 export async function deleteProduct(id: string) {
   const admin = await requireAdmin();
+
+  // Los frames del 360 se borran en cascada en la DB, pero los blobs no:
+  // hay que quitarlos antes o quedan huérfanos sin ninguna pantalla que los liste.
+  const frames = await db.productSpinFrame.findMany({ where: { productId: id }, select: { url: true } });
+  for (const f of frames) {
+    if (f.url.includes('.blob.vercel-storage.com')) {
+      await del(f.url).catch(() => {});
+    }
+  }
+
   const product = await db.product.delete({ where: { id } });
 
   await logAudit({

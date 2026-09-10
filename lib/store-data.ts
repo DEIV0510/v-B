@@ -56,7 +56,8 @@ export async function getProductBySlug(slug: string) {
     include: {
       mainImage: true,
       collection: true,
-      images: { include: { media: true }, orderBy: { sortOrder: 'asc' } }
+      images: { include: { media: true }, orderBy: { sortOrder: 'asc' } },
+      spinFrames: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] }
     }
   });
 }

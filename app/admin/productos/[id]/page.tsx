@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProduct } from '@/app/actions/products';
 import { listCollections } from '@/app/actions/collections';
@@ -40,6 +41,20 @@ export default async function EditProductPage({ params }: { params: { id: string
           isSoldout: product.isSoldout
         }}
       />
+
+      {/* Fuera del <form> de ProductForm a proposito: anidar formularios rompe
+          la hidratacion de React (mismo motivo documentado en MediaPicker). */}
+      <div className="admin-card" style={{ marginTop: 20 }}>
+        <h2 style={{ fontSize: 15, marginBottom: 6 }}>Visor 360°</h2>
+        <p style={{ fontSize: 13, color: 'var(--c-grey-dim)', marginBottom: 14 }}>
+          {product._count.spinFrames === 0
+            ? 'Sin secuencia. Puedes subir fotos del producto girando para que el cliente lo vea en 360°.'
+            : `${product._count.spinFrames} foto(s) · ${product.spinEnabled ? 'Visible en la tienda' : 'Apagado'}`}
+        </p>
+        <Link href={`/admin/productos/${product.id}/360`} className="admin-btn">
+          Configurar visor 360°
+        </Link>
+      </div>
     </>
   );
 }

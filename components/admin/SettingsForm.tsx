@@ -35,6 +35,23 @@ export default function SettingsForm({ initial, visitorCount }: { initial: SiteS
       {error && <div className="admin-alert admin-alert--error">{error}</div>}
 
       <fieldset className="admin-fieldset">
+        <legend>Estado de la tienda</legend>
+        <label className="admin-field--row">
+          <input type="checkbox" checked={form.storeActive} onChange={(e) => set('storeActive', e.target.checked)} />
+          Tienda activa
+        </label>
+        <small>
+          Si la desmarcas, la tienda pública muestra una pantalla de mantenimiento a los clientes. Este panel (
+          <code>/admin</code>) sigue funcionando siempre, para que puedas volver a activarla cuando quieras.
+        </small>
+        {!form.storeActive && (
+          <div className="admin-alert admin-alert--error" style={{ marginBottom: 0 }}>
+            La tienda está en modo mantenimiento ahora mismo — los clientes no ven el catálogo.
+          </div>
+        )}
+      </fieldset>
+
+      <fieldset className="admin-fieldset">
         <legend>WhatsApp</legend>
         <div className="admin-field">
           <label>Número de WhatsApp</label>

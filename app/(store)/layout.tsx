@@ -6,6 +6,7 @@ import Footer from '@/components/store/Footer';
 import CartDrawer from '@/components/store/CartDrawer';
 import SiteScript from '@/components/store/SiteScript';
 import VisitorTracker from '@/components/store/VisitorTracker';
+import MaintenanceScreen from '@/components/store/MaintenanceScreen';
 import type { BundleRule } from '@/lib/pricing';
 
 // La tienda lee directo de la base de datos en cada visita — un cambio del
@@ -13,8 +14,15 @@ import type { BundleRule } from '@/lib/pricing';
 export const dynamic = 'force-dynamic';
 
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
-  const [settings, products, collections] = await Promise.all([
-    getSiteSettingsPublic(),
+  const settings = await getSiteSettingsPublic();
+
+  // El modo mantenimiento solo afecta este route group (store) — /admin
+  // vive fuera de este layout y nunca se bloquea.
+  if (!settings.storeActive) {
+    return <MaintenanceScreen storeName={settings.storeName} whatsappNumber={settings.whatsappNumber} />;
+  }
+
+  const [products, collections] = await Promise.all([
     getAllActiveProducts(),
     db.collection.findMany({ where: { bundleQty: { not: null }, bundlePrice: { not: null } } })
   ]);

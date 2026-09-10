@@ -20,9 +20,14 @@ export type SiteSettingsInput = {
   shippingCost: number;
   trustBadgeEnabled: boolean;
   trustBadgeBaseCount: number;
+  storeActive: boolean;
 };
 
 export async function getSiteSettings() {
+  // Solo el admin: crea la fila singleton si no existe. La tienda publica usa
+  // getSiteSettingsPublic() de lib/store-data.ts, que nunca escribe.
+  await requireAdmin();
+
   const settings = await db.siteSettings.findUnique({
     where: { id: 'singleton' },
     include: { logoMedia: true, faviconMedia: true }

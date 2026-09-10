@@ -27,7 +27,8 @@ export default async function SettingsPage() {
           hours: settings.hours,
           shippingCost: settings.shippingCost,
           trustBadgeEnabled: settings.trustBadgeEnabled,
-          trustBadgeBaseCount: settings.trustBadgeBaseCount
+          trustBadgeBaseCount: settings.trustBadgeBaseCount,
+          storeActive: settings.storeActive
         }}
         visitorCount={settings.visitorCount}
       />

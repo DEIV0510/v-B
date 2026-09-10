@@ -173,6 +173,11 @@ model SiteSettings {
   trustBadgeBaseCount   Int     @default(0)
   visitorCount          Int     @default(0)
 
+  // Modo mantenimiento: si es false, la tienda publica muestra una pantalla
+  // de mantenimiento en vez del contenido normal. El admin (/admin) nunca
+  // se ve afectado, solo el route group (store).
+  storeActive           Boolean @default(true)
+
   updatedAt             DateTime @updatedAt
 }
 

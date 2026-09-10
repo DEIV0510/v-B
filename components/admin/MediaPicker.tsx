@@ -35,8 +35,7 @@ export default function MediaPicker(props: Props) {
     }
   }
 
-  async function onUpload(e: React.FormEvent) {
-    e.preventDefault();
+  async function onUpload() {
     const file = fileRef.current?.files?.[0];
     if (!file) return;
     setUploading(true);
@@ -73,12 +72,15 @@ export default function MediaPicker(props: Props) {
 
       {open && (
         <div style={{ marginTop: 12, border: '1px solid var(--line)', borderRadius: 8, padding: 14 }}>
-          <form onSubmit={onUpload} style={{ display: 'flex', gap: 8, marginBottom: 14, alignItems: 'center' }}>
+          {/* Sin <form> a proposito: este componente se usa dentro de otros
+              formularios (producto, coleccion, config) y anidar forms es HTML
+              invalido — rompe la hidratacion de React. */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 14, alignItems: 'center' }}>
             <input ref={fileRef} type="file" accept="image/*" />
-            <button type="submit" className="admin-btn admin-btn--small" disabled={uploading}>
+            <button type="button" className="admin-btn admin-btn--small" disabled={uploading} onClick={onUpload}>
               {uploading ? 'Subiendo…' : 'Subir nueva'}
             </button>
-          </form>
+          </div>
           {error && <div className="admin-alert admin-alert--error">{error}</div>}
           {loading ? (
             <p style={{ fontSize: 12.5, color: 'var(--c-grey-dim)' }}>Cargando imágenes…</p>

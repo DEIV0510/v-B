@@ -149,7 +149,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 }
 /* Navegacion interna: el script en linea de Loader.tsx marca <html> y la
    cortina ni se pinta. Ver el comentario alli. */
-.is-warm .loader{ display: none; }
+[data-warm] .loader{ display: none; }
 .loader__panel{
   position: absolute; top: 0; bottom: 0;
   width: 50.6%;
@@ -221,7 +221,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 @media (prefers-reduced-motion: reduce){
   /* Navegacion interna: el script en linea de Loader.tsx marca <html> y la
    cortina ni se pinta. Ver el comentario alli. */
-.is-warm .loader{ display: none; }
+[data-warm] .loader{ display: none; }
 .loader__panel{ transition: none; }
   .loader__content{ transition: none; }
   .loader__mark, .loader__tag, .loader__meter{ animation: none; }
@@ -500,6 +500,56 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 }
 .hero__cta{ display: flex; flex-wrap: wrap; gap: 14px; width: 100%; }
 .hero__cta .btn{ flex: 1 1 auto; }
+
+/* Prueba social dentro del hero, debajo de los botones. Va como banda ordenada
+   (numero | texto) en vez de un segundo titular gigante: el hero ya tiene el
+   "HECHO PARA RENDIR" y dos titulares Anton seguidos se pelean entre si. */
+.hero__trust{
+  width: 100%;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.hero__trust-row{
+  display: flex; align-items: flex-start; gap: 18px;
+}
+.hero__trust-count{
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; gap: 2px;
+  padding-right: 18px;
+  border-right: 1px solid var(--line-soft);
+}
+.hero__trust-count strong{
+  font-family: var(--ff-display); font-weight: 400;
+  font-size: clamp(30px, 8vw, 40px); line-height: 1;
+  color: var(--c-wine-3);
+  font-variant-numeric: tabular-nums;
+}
+.hero__trust-count span{
+  font-size: 9.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--c-grey-dim);
+}
+.hero__trust-copy{ min-width: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 2px; }
+.hero__trust-eyebrow{
+  font-size: 9.5px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-wine-3);
+}
+.hero__trust-claim{
+  font-family: var(--ff-display); font-weight: 400; text-transform: uppercase;
+  font-size: clamp(15px, 4vw, 21px); line-height: 1.06; letter-spacing: .01em;
+  /* reparte los renglones en vez de dejar "V&B." solo en la ultima linea */
+  text-wrap: balance;
+}
+.hero__trust-lede{
+  font-size: 12.5px; line-height: 1.45; color: var(--c-grey-dim);
+  max-width: 40ch;
+}
+/* Por debajo de 380px el numero y el texto lado a lado aprietan demasiado. */
+@media (max-width: 379px){
+  .hero__trust-row{ flex-direction: column; align-items: flex-start; gap: 14px; }
+  .hero__trust-count{ padding-right: 0; border-right: 0; }
+}
 
 .hero__vtext{ display: none; }
 .hero__index{ display: none; }
@@ -1014,9 +1064,6 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
     max-height: none;                 /* sin esto, en pantallas bajas 62vh deformaria */
   }
 }
-/* Sin capturas no se pinta la rejilla, asi que el encabezado queda de ultimo:
-   que no arrastre los 48px de aire de abajo. */
-.testimonials__head:last-child{ margin-bottom: 0; }
 
 /* =========================================================
    FOOTER

@@ -1,52 +1,34 @@
-import { splitLines } from '@/lib/text';
 import type { SectionData } from './types';
 
 type Props = {
   section: SectionData;
-  trustCount: number | null;
 };
 
-export default function Testimonials({ section, trustCount }: Props) {
-  const lines = splitLines(section.title);
-  const hasImages = section.images.length > 0;
-
-  if (trustCount === null && !hasImages) return null;
+/**
+ * Los textos y el contador de esta sección viven ahora dentro del hero, justo
+ * debajo de "Comprar ahora" (ver Hero.tsx / HeroTrust). Aquí quedan solo las
+ * capturas de clientes, que necesitan ancho propio y no caben arriba. Sin
+ * capturas subidas desde /admin/inicio no se pinta nada: así no queda un hueco
+ * ni un titular repetido.
+ */
+export default function Testimonials({ section }: Props) {
+  if (section.images.length === 0) return null;
 
   return (
     <section className="testimonials">
-      <div className="testimonials__head">
-        {section.subtitle && <p className="eyebrow reveal">{section.subtitle}</p>}
-        {lines.length > 0 && (
-          <h2 className="section-title reveal">
-            {lines.map((line, idx) => (
-              <span className="line" key={idx}>{line}</span>
-            ))}
-          </h2>
-        )}
-
-        {trustCount !== null && (
-          <div className="testimonials__badge reveal">
-            <strong>+{trustCount.toLocaleString('es-CO')}</strong>
-            <span>clientes satisfechos</span>
-          </div>
-        )}
-
-        {section.body && <p className="testimonials__lede reveal">{section.body}</p>}
+      <div className="testimonials__grid reveal">
+        {section.images.map((img, idx) => (
+          <img
+            key={idx}
+            src={img.media.url}
+            alt={img.media.altText || 'Testimonio de cliente V&B'}
+            width={img.media.width ?? undefined}
+            height={img.media.height ?? undefined}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
       </div>
-
-      {hasImages && (
-        <div className="testimonials__grid reveal">
-          {section.images.map((img, idx) => (
-            <img
-              key={idx}
-              src={img.media.url}
-              alt={img.media.altText || 'Testimonio de cliente V&B'}
-              loading="lazy"
-              decoding="async"
-            />
-          ))}
-        </div>
-      )}
     </section>
   );
 }

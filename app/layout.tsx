@@ -20,8 +20,12 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // El script en linea de Loader.tsx marca <html data-warm> antes del primer
+  // pintado, para no repetir la cortina del loader en cada navegacion interna.
+  // React no renderiza ese atributo, asi que avisa de "extra attributes from the
+  // server" aunque lo respete: suppressHydrationWarning silencia solo ese aviso.
   return (
-    <html lang="es" className={`${anton.variable} ${inter.variable}`}>
+    <html lang="es" className={`${anton.variable} ${inter.variable}`} suppressHydrationWarning>
       <body>{children}</body>
     </html>
   );

@@ -38,7 +38,7 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
     /* ---------------- LOADER ---------------- */
     // Navegación interna (html.is-warm): la cortina no se muestra, así que
     // tampoco arrancamos el contador ni los temporizadores de ocultado.
-    const warmNav = document.documentElement.classList.contains('is-warm');
+    const warmNav = document.documentElement.hasAttribute('data-warm');
     if (warmNav) document.getElementById('loader')?.remove();
     const loader = warmNav ? null : document.getElementById('loader');
     const loaderFill = document.getElementById('loaderFill');

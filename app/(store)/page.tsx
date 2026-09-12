@@ -47,6 +47,9 @@ export default async function HomePage() {
 
   const [licra, tank] = await Promise.all([getCollectionWithProducts('licra'), getCollectionWithProducts('tank')]);
   const trustCount = await getTrustBadgeCount();
+  // La prueba social se pinta dentro del hero, debajo de "Comprar ahora";
+  // la seccion de abajo se queda solo con las capturas de clientes.
+  const testimonialsSection = sections.find((s) => s.key === 'testimonials') ?? null;
   const licraProducts = licra?.products.map((p) => ({ ...p, sizes: p.sizes as string[] })) ?? [];
   const tankProducts = tank?.products.map((p) => ({ ...p, sizes: p.sizes as string[] })) ?? [];
 
@@ -56,7 +59,13 @@ export default async function HomePage() {
         const data = toSectionData(section);
         switch (section.key) {
           case 'hero':
-            return <Hero key={section.id} section={data} />;
+            return (
+              <Hero
+                key={section.id}
+                section={data}
+                trust={testimonialsSection ? { section: toSectionData(testimonialsSection), count: trustCount } : null}
+              />
+            );
           case 'value':
             return <Value key={section.id} section={data} />;
           case 'detail':
@@ -82,7 +91,7 @@ export default async function HomePage() {
           case 'about':
             return <About key={section.id} section={data} />;
           case 'testimonials':
-            return <Testimonials key={section.id} section={data} trustCount={trustCount} />;
+            return <Testimonials key={section.id} section={data} />;
           case 'final_cta':
             return <FinalCta key={section.id} section={data} />;
           default:

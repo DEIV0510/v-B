@@ -10,11 +10,14 @@ export default function Loader({ logoMarkLgUrl }: Props) {
           loader se repetía en cada clic a un producto: pantalla negra y contador
           00→100% otra vez sobre una página que ya estaba lista. El script va en
           línea a propósito: tiene que correr ANTES del primer pintado, no tras
-          la hidratación, o la cortina alcanza a verse igual. */}
+          la hidratación, o la cortina alcanza a verse igual. Se marca con un
+          data-attribute y NO con una clase: app/layout.tsx ya renderiza
+          className en <html>, así que tocarla desde aquí rompe la hidratación
+          de React. */}
       <script
         dangerouslySetInnerHTML={{
           __html:
-            "try{if(sessionStorage.getItem('vb_seen')){document.documentElement.classList.add('is-warm')}else{sessionStorage.setItem('vb_seen','1')}}catch(e){}"
+            "try{if(sessionStorage.getItem('vb_seen')){document.documentElement.setAttribute('data-warm','1')}else{sessionStorage.setItem('vb_seen','1')}}catch(e){}"
         }}
       />
     <div

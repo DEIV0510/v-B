@@ -4,6 +4,19 @@ type Props = {
 
 export default function Loader({ logoMarkLgUrl }: Props) {
   return (
+    <>
+      {/* Solo la primera carga de la sesión ve la cortina. Toda la tienda navega
+          con <a href> plano (carga de documento completa), así que sin esto el
+          loader se repetía en cada clic a un producto: pantalla negra y contador
+          00→100% otra vez sobre una página que ya estaba lista. El script va en
+          línea a propósito: tiene que correr ANTES del primer pintado, no tras
+          la hidratación, o la cortina alcanza a verse igual. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "try{if(sessionStorage.getItem('vb_seen')){document.documentElement.classList.add('is-warm')}else{sessionStorage.setItem('vb_seen','1')}}catch(e){}"
+        }}
+      />
     <div
       id="loader"
       className="loader"
@@ -29,5 +42,6 @@ export default function Loader({ logoMarkLgUrl }: Props) {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -9,9 +9,12 @@ type GalleryImage = { url: string; altText: string; width: number | null; height
 
 export type SpinData = { frames: SpinFrame[]; alt: string; reverse: boolean };
 
-type Props = { images: GalleryImage[]; spin?: SpinData | null };
+type Props = { images: GalleryImage[]; spin?: SpinData | null; mediaVariant?: 'cover' | 'contain' };
 
-export default function ProductGallery({ images, spin }: Props) {
+export default function ProductGallery({ images, spin, mediaVariant = 'cover' }: Props) {
+  // Las licras vienen con mediaVariant 'contain': su foto es un recorte cerrado
+  // (los brazos tocan los bordes), asi que recortarla ademas la deja incompleta.
+  const mainClass = `product-detail__main${mediaVariant === 'contain' ? ' product-detail__main--contain' : ''}`;
   const hasSpin = !!spin && spin.frames.length >= MIN_SPIN_FRAMES;
   const [mode, setMode] = useState<'spin' | 'photo'>(hasSpin ? 'spin' : 'photo');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -23,7 +26,7 @@ export default function ProductGallery({ images, spin }: Props) {
     return (
       <div className="product-detail__gallery corner-frame">
         <TiltImage
-          className="product-detail__main"
+          className={mainClass}
           src={active.url}
           alt={active.altText}
           width={active.width ?? undefined}
@@ -53,7 +56,7 @@ export default function ProductGallery({ images, spin }: Props) {
   // ---- CON 360: ambos paneles montados, se alternan por CSS ----
   return (
     <div className="product-detail__gallery corner-frame">
-      <div className="product-detail__main product-detail__pane" data-mode={mode}>
+      <div className={`${mainClass} product-detail__pane`} data-mode={mode}>
         <ProductSpin frames={spin.frames} alt={spin.alt} reverse={spin.reverse} />
         {active && (
           <TiltImage

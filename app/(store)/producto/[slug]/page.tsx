@@ -56,7 +56,7 @@ export default async function ProductDetailPage({ params }: Props) {
       </nav>
 
       <section className="product-detail">
-        <ProductGallery images={gallery} spin={spin} />
+        <ProductGallery images={gallery} spin={spin} mediaVariant={product.mediaVariant as 'cover' | 'contain'} />
 
         <div className="product-detail__info">
           <p className="eyebrow">{product.collection.name}</p>

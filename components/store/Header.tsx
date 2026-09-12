@@ -7,15 +7,15 @@ export default function Header({ logoUrl }: Props) {
     <>
       <header className="header" id="header">
         <div className="header__row">
-          <a href="#inicio" className="header__logo" aria-label="V&B Performance Apparel — Inicio">
+          <a href="/#inicio" className="header__logo" aria-label="V&B Performance Apparel — Inicio">
             <img src={logoUrl} alt="V&B" width={150} height={78} />
           </a>
 
           <nav className="nav" id="nav">
-            <a href="#inicio" className="nav__link">Inicio</a>
-            <a href="#coleccion" className="nav__link">Colección</a>
-            <a href="#productos" className="nav__link">Productos</a>
-            <a href="#nosotros" className="nav__link">Nosotros</a>
+            <a href="/#inicio" className="nav__link">Inicio</a>
+            <a href="/#coleccion" className="nav__link">Colección</a>
+            <a href="/#productos" className="nav__link">Productos</a>
+            <a href="/#nosotros" className="nav__link">Nosotros</a>
           </nav>
 
           <div className="header__actions">

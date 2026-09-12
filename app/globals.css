@@ -26,6 +26,7 @@
   --dur-fast: 180ms;
   --dur: 320ms;
   --dur-slow: 620ms;
+  --dur-reveal: 800ms;
   --ease: cubic-bezier(.16,.84,.44,1);
   --ease-in: cubic-bezier(.7,0,.84,0);
 
@@ -61,7 +62,9 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   *, *::before, *::after{
     animation-duration: .001ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: .001ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }
@@ -144,6 +147,9 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   position: fixed; inset: 0;
   z-index: 999;
 }
+/* Navegacion interna: el script en linea de Loader.tsx marca <html> y la
+   cortina ni se pinta. Ver el comentario alli. */
+.is-warm .loader{ display: none; }
 .loader__panel{
   position: absolute; top: 0; bottom: 0;
   width: 50.6%;
@@ -213,7 +219,10 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   100%{ left: 140%; }
 }
 @media (prefers-reduced-motion: reduce){
-  .loader__panel{ transition: none; }
+  /* Navegacion interna: el script en linea de Loader.tsx marca <html> y la
+   cortina ni se pinta. Ver el comentario alli. */
+.is-warm .loader{ display: none; }
+.loader__panel{ transition: none; }
   .loader__content{ transition: none; }
   .loader__mark, .loader__tag, .loader__meter{ animation: none; }
   .loader__mark::after{ display: none; }
@@ -227,8 +236,22 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   z-index: 90;
   height: var(--header-h);
   display: flex; align-items: center;
-  transition: background var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease), box-shadow var(--dur) var(--ease), height var(--dur) var(--ease);
+  /* Se anima la opacidad de ::before, NO el backdrop-filter: transicionar un
+     blur de 14px obliga a re-rasterizar el fondo del header en cada frame,
+     justo mientras el dedo esta scrolleando. Visualmente es lo mismo. */
+  transition: box-shadow var(--dur) var(--ease), height var(--dur) var(--ease);
 }
+.header::before{
+  content: '';
+  position: absolute; inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: rgba(5,5,5,.72);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  transition: opacity var(--dur) var(--ease);
+}
+.header--scrolled::before{ opacity: 1; }
 .header__row{
   width: 100%;
   max-width: var(--container);
@@ -239,9 +262,6 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 }
 .header--scrolled{
   height: 64px;
-  background: rgba(5,5,5,.72);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
   box-shadow: 0 1px 0 var(--line-soft);
 }
 .header__logo{ display: block; flex: 0 0 auto; }
@@ -356,10 +376,26 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
    ========================================================= */
 .reveal{
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .8s var(--ease), transform .8s var(--ease);
+  transform: translateY(var(--reveal-y, 28px));
+  transition:
+    opacity var(--dur-reveal) var(--ease) var(--stagger, 0ms),
+    transform var(--dur-reveal) var(--ease) var(--stagger, 0ms);
 }
 .reveal.is-visible{ opacity: 1; transform: none; }
+
+/* Escalonado por posicion: sin JS y sin indices en el HTML. Antes las 3 fichas
+   de una vitrina aparecian exactamente a la vez, que es lo que hace que una
+   rejilla se lea como plantilla en vez de como escaparate. */
+.shop__grid > :nth-child(1){ --stagger: 0ms; }
+.shop__grid > :nth-child(2){ --stagger: 90ms; }
+.shop__grid > :nth-child(3){ --stagger: 180ms; }
+.shop__grid > :nth-child(n+4){ --stagger: 260ms; }
+
+/* El titular recorre un poco mas que el cuerpo y el eyebrow entra primero:
+   jerarquia de lectura, no todo el bloque moviendose en bloque. */
+.section-title.reveal, .hero__title.reveal{ --reveal-y: 34px; }
+.eyebrow.reveal{ --reveal-y: 14px; }
+
 @media (prefers-reduced-motion: reduce){
   .reveal{ opacity: 1; transform: none; transition: none; }
 }
@@ -679,7 +715,15 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-card__media img{ width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
 .product-card:hover .product-card__media img{ transform: scale(1.055); }
 .product-card__media--contain{ background: #000; }
-.product-card__media--contain img{ object-fit: contain; padding: 10px; }
+/* Aire alrededor de la prenda en las tarjetas 'contain' (licras). La foto de
+   licra es un recorte cerrado 900x920 donde los brazos tocan ambos bordes; el
+   tank es un flat-lay cuya prenda ocupa ~86% del encuadre. Con el padding fijo
+   de 10px (2,7% del recuadro) la licra se dibujaba a 347px de 367 y su logo
+   bordado salia ~45% mas grande que el del tank. En % la proporcion se mantiene
+   igual en movil y en desktop. Sigue siendo contain: la prenda se ve COMPLETA,
+   solo mas lejos. NO poner object-fit en .tilt-image img: eso volveria a
+   recortar las licras (regresion ya sufrida una vez). */
+.product-card__media--contain img{ object-fit: contain; padding: 6% 12%; }
 
 .product-card__body{ padding: 22px 22px 26px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 .product-card__row{ display: flex; align-items: center; justify-content: space-between; }
@@ -767,6 +811,13 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   position: relative;
   height: 56vh; min-height: 380px;
 }
+/* Ancla el recorte arriba. Con una foto vertical de modelo (857x1437, ratio
+   0.6) el object-fit:cover de .product-cover recorta en vertical y, centrado,
+   se come la cabeza; el recorte del atleta ya trae un 4,5% de aire sobre la
+   cabeza, asi que al 0% queda justo encuadrado. No afecta a una foto de
+   producto cerrada (licra 900x920, ratio 0.98): esa es MAS ancha que la caja,
+   recorta en horizontal y el eje Y se ignora. */
+.immersive__figure img{ object-position: 50% 0%; }
 .immersive__mark{
   position: absolute; top: 28px; left: var(--gutter);
   display: flex; flex-direction: column; gap: 2px;
@@ -933,21 +984,39 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 }
 .testimonials__lede{ color: var(--c-grey-dim); font-size: 14.5px; margin-top: 18px; }
 
+/* Las capturas de WhatsApp son verticales y cada una trae un alto distinto: con
+   columnas fijas las filas quedaban dentadas y, con 1 o 2 capturas, media
+   rejilla vacia. Fila centrada que se envuelve sola: sirve igual con 1, 2, 3,
+   4, 5 o 6 capturas. Nunca se recorta ni se deforma la captura. */
 .testimonials__grid{
   max-width: var(--container); margin: 0 auto;
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px;
+  display: flex; flex-wrap: wrap;
+  justify-content: center; align-items: flex-start;
+  gap: 18px;
 }
 .testimonials__grid img{
-  width: 100%; height: auto; border-radius: 10px;
+  flex: 0 0 auto;
+  width: auto; height: auto;          /* ambos auto => se respeta la proporcion real */
+  max-width: min(300px, 100%);        /* movil: una por fila, legible */
+  max-height: 62vh;                   /* una captura muy alta no se come la pantalla */
+  border-radius: 10px;
   border: 1px solid var(--line);
+  background: var(--c-void);
   box-shadow: 0 20px 50px -24px rgba(0,0,0,.6);
 }
 @media (min-width: 640px){
-  .testimonials__grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .testimonials__grid{ gap: 24px; }
+  /* Alto igual para todas => la fila queda pareja aunque cada captura tenga
+     otra proporcion; el ancho lo pone la imagen, sin recortar. */
+  .testimonials__grid img{
+    height: clamp(320px, 40vw, 440px);
+    max-width: 100%;
+    max-height: none;                 /* sin esto, en pantallas bajas 62vh deformaria */
+  }
 }
-@media (min-width: 980px){
-  .testimonials__grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
+/* Sin capturas no se pinta la rejilla, asi que el encabezado queda de ultimo:
+   que no arrastre los 48px de aire de abajo. */
+.testimonials__head:last-child{ margin-bottom: 0; }
 
 /* =========================================================
    FOOTER
@@ -1031,11 +1100,21 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .cart__foot{ padding: 20px var(--gutter) 28px; border-top: 1px solid var(--line-soft); }
 .cart__row{ display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .cart__row span{ font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--c-grey-dim); }
-.cart__row strong{ font-size: 13px; font-weight: 700; }
+.cart__row strong{ font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .cart__row--discount strong{ color: var(--c-wine-3); }
+/* display:flex de autor empata en especificidad con el [hidden] del user-agent
+   y gana por origen, asi que #cartDiscountRow / #cartShippingRow se pintaban
+   pese a .hidden = true: el descuento salia "-$0" con un solo producto y
+   confundia al cliente. Mismo remiendo que .icon-btn__badge[hidden] de arriba. */
+.cart__row[hidden]{ display: none; }
+/* .btn--primary no tenia estado deshabilitado propio (solo .btn--buy:disabled),
+   asi que el "Preparando pedido…" del checkout se leia sin cambiar de aspecto. */
+.btn--primary:disabled{ opacity: .45; cursor: not-allowed; pointer-events: none; }
+.btn.is-busy{ opacity: .72; cursor: progress; }
+.btn.is-busy:active{ transform: none; }
 .cart__total{ display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 16px; padding-top: 12px; border-top: 1px solid var(--line-soft); }
 .cart__total span{ font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--c-grey-dim); }
-.cart__total strong{ font-size: 22px; }
+.cart__total strong{ font-size: 22px; font-variant-numeric: tabular-nums; }
 
 /* =========================================================
    PRODUCT DETAIL (/producto/[slug]) — pagina nueva, reutiliza
@@ -1065,19 +1144,57 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
    (product-card__media, product-detail__main, etc.) sin depender de esa clase.
    NO define object-fit a proposito: cada contenedor decide si recorta (cover)
    o muestra la prenda completa (contain, como las licras). */
-.tilt-image{ position: relative; overflow: hidden; display: block; width: 100%; height: 100%; }
+.tilt-image{
+  position: relative; overflow: hidden; display: block; width: 100%; height: 100%;
+  /* manipulation, NO pan-y: por debajo de 780px .shop__grid es un carrusel
+     horizontal con scroll-snap y la tarjeta ocupa el 78% del ancho, asi que el
+     arrastre horizontal sobre la foto TIENE que seguir siendo del carrusel.
+     'manipulation' solo quita el retardo del doble-tap y deja scroll y swipe
+     intactos. El gesto 3D se retira solo por umbral + pointercancel. */
+  touch-action: manipulation;
+  /* La foto va dentro de un <a>: sin esto, mantener pulsado abre la hoja de
+     "previsualizar enlace" de iOS justo cuando el efecto se esta inclinando. */
+  -webkit-touch-callout: none;
+}
+/* Capa que recibe la rotacion 3D, separada del <img> para que el transform en
+   linea que escribe el JS no pise las reglas del CSS sobre la propia imagen. */
+.tilt-image__stage{
+  display: block; width: 100%; height: 100%;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
 .tilt-image img{
   width: 100%; height: 100%; display: block;
-  transition: transform .15s ease-out;
-  will-change: transform;
+  -webkit-user-drag: none;
 }
+/* El zoom de hover de la tarjeta (linea ~680) llevaba muerto desde que TiltImage
+   escribia el transform en linea sobre el <img>. Al mover el transform a
+   .tilt-image__stage reviviria y cambiaria el aspecto actual (en las licras
+   --contain se comeria el aire nuevo). Se mantiene apagado a proposito. */
+.product-card:hover .product-card__media .tilt-image img{ transform: none; }
 .product-detail__main img{ object-fit: cover; }
+/* La ficha recortaba la licra un 18,5% a lo ancho (cover sobre una foto casi
+   cuadrada dentro de una caja 4/5): se le comian las mangas y la prenda salia
+   ampliada, que es por lo que el logo bordado se veia mas grande. Con contain
+   se ve completa; el padding le da el mismo aire que tiene el flat-lay del tank. */
+.product-detail__main--contain img{ object-fit: contain; padding: 4% 7%; }
+/* El brillo NO recalcula su degradado en cada frame (eso seria repintar): es un
+   circulo fijo del doble del tamano de la caja que se mueve con translate3d, de
+   modo que durante el gesto solo cambian transform y opacity. El 28% de
+   closest-side deja el mismo radio visible que tenia el 'transparent 55%'. */
 .tilt-image__glare{
-  position: absolute; inset: 0; pointer-events: none;
-  transition: opacity .15s ease-out;
+  position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  pointer-events: none; opacity: 0;
+  background: radial-gradient(circle closest-side at 50% 50%, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 28%);
   mix-blend-mode: overlay;
 }
-@media (hover: none){
+/* will-change solo mientras la tarjeta esta en pantalla y el efecto vivo: evita
+   dejar 6 capas de composicion permanentes en un telefono. */
+.tilt-image.is-live .tilt-image__stage{ will-change: transform; }
+.tilt-image.is-live .tilt-image__glare{ will-change: transform, opacity; }
+/* Cinturon de seguridad: el JS ya respeta la preferencia con matchMedia. */
+@media (prefers-reduced-motion: reduce){
+  .tilt-image__stage{ transform: none !important; }
   .tilt-image__glare{ display: none; }
 }
 

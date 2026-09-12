@@ -58,7 +58,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
       <SiteScript
         bundleRules={bundleRules}
         shippingCost={settings.shippingCost}
-        searchProducts={products.map((p) => ({ id: p.id, name: p.name }))}
+        searchProducts={products.map((p) => ({ id: p.id, slug: p.slug, name: p.name }))}
       />
     </>
   );

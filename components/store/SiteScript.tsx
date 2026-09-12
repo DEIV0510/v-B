@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { computeTotals, formatCOP, type BundleRule } from '@/lib/pricing';
 import { getCartSummary } from '@/app/actions/checkout';
 
-export type SearchableProduct = { id: string; name: string };
+export type SearchableProduct = { id: string; slug: string; name: string };
 
 type Props = {
   bundleRules: BundleRule[];
@@ -36,7 +36,11 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ---------------- LOADER ---------------- */
-    const loader = document.getElementById('loader');
+    // Navegación interna (html.is-warm): la cortina no se muestra, así que
+    // tampoco arrancamos el contador ni los temporizadores de ocultado.
+    const warmNav = document.documentElement.classList.contains('is-warm');
+    if (warmNav) document.getElementById('loader')?.remove();
+    const loader = warmNav ? null : document.getElementById('loader');
     const loaderFill = document.getElementById('loaderFill');
     const loaderDigits = document.getElementById('loaderDigits');
     let loaderProgress = 0;
@@ -81,6 +85,43 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
     if (document.readyState === 'complete') onLoad();
     else window.addEventListener('load', onLoad);
 
+    /* ---------------- BLOQUEO DE SCROLL ----------------
+       document.body.style.overflow = 'hidden' NO bloqueaba nada: el overflow
+       del <body> solo se propaga al viewport si el del elemento raiz es
+       'visible', y app/globals.css tiene "html, body{ overflow-x: clip }".
+       Con el carrito o el menu abierto la pagina seguia scrolleando detras.
+       Se bloquea en <html> (lo que Chrome/Firefox respetan) y ademas se fija el
+       body con position:fixed, que es lo unico fiable en iOS Safari; al soltar
+       se devuelve la posicion de scroll exacta. */
+    const scrollLocks = new Set<'cart' | 'nav'>();
+    let lockedScrollY = 0;
+    function lockScroll(owner: 'cart' | 'nav', on: boolean) {
+      const root = document.documentElement;
+      const wasLocked = scrollLocks.size > 0;
+      if (on) scrollLocks.add(owner);
+      else scrollLocks.delete(owner);
+      const isLocked = scrollLocks.size > 0;
+      if (isLocked === wasLocked) return;
+
+      if (isLocked) {
+        lockedScrollY = window.scrollY;
+        root.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.top = -lockedScrollY + 'px';
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+      } else {
+        root.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, lockedScrollY);
+      }
+    }
+
     /* ---------------- HEADER SCROLL ---------------- */
     const header = document.getElementById('header');
     function onScroll() {
@@ -100,13 +141,13 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
       nav?.classList.add('is-open');
       navOverlay?.classList.add('is-open');
       burger?.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
+      lockScroll('nav', true);
     }
     function closeNav() {
       nav?.classList.remove('is-open');
       navOverlay?.classList.remove('is-open');
       burger?.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
+      lockScroll('nav', false);
     }
     const onBurgerClick = () => {
       burger?.getAttribute('aria-expanded') === 'true' ? closeNav() : openNav();
@@ -163,15 +204,19 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
     const onSearchKeydown = (e: KeyboardEvent) => {
       if (e.key !== 'Enter' || !searchInput) return;
       const match = findProduct(searchInput.value);
-      if (match) {
-        const el = document.getElementById('card-' + match.id);
-        if (el) {
-          closeSearch();
-          el.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
-          el.classList.add('is-highlight');
-          window.setTimeout(() => el.classList.remove('is-highlight'), 1400);
-        }
+      if (!match) return;
+      const el = document.getElementById('card-' + match.id);
+      if (el) {
+        closeSearch();
+        el.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+        el.classList.add('is-highlight');
+        window.setTimeout(() => el.classList.remove('is-highlight'), 1400);
+        return;
       }
+      // La tarjeta no esta en esta pagina (p. ej. estamos en /producto/<slug>, o la
+      // seccion de esa coleccion esta apagada): se va a la ficha, que siempre existe.
+      closeSearch();
+      window.location.href = '/producto/' + match.slug;
     };
     searchInput?.addEventListener('input', onSearchInput);
     searchInput?.addEventListener('keydown', onSearchKeydown);
@@ -225,19 +270,19 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
     const cartShippingEl = document.getElementById('cartShipping');
     const cartTotalEl = document.getElementById('cartTotal');
     const cartCountEl = document.getElementById('cartCount');
-    const cartCheckoutBtn = document.getElementById('cartCheckout');
+    const cartCheckoutBtn = document.getElementById('cartCheckout') as HTMLButtonElement | null;
 
     function openCart() {
       cartEl?.classList.add('is-open');
       cartOverlay?.classList.add('is-open');
       cartToggle?.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
+      lockScroll('cart', true);
     }
     function closeCart() {
       cartEl?.classList.remove('is-open');
       cartOverlay?.classList.remove('is-open');
       cartToggle?.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = nav?.classList.contains('is-open') ? 'hidden' : '';
+      lockScroll('cart', false);
     }
     const onCartToggleClick = () => {
       cartEl?.classList.contains('is-open') ? closeCart() : openCart();
@@ -325,6 +370,8 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
         }
       }
 
+      if (cartCheckoutBtn) cartCheckoutBtn.disabled = !cartState.items.length;
+
       saveCart();
     }
 
@@ -379,24 +426,92 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
       return { btn, handler };
     });
 
+    /* ---------------- CHECKOUT WHATSAPP ----------------
+       El precio SIEMPRE se re-verifica en el servidor con getCartSummary: el
+       carrito del cliente solo aporta productId/size/qty, nunca el importe.
+
+       Antes esto usaba window.open('', '_blank', 'noopener'), que por
+       especificacion HTML devuelve NULL cuando la feature 'noopener' esta
+       presente (el navegador descarta a proposito la referencia). Con win
+       siempre null, la whatsappUrl valida nunca se usaba y salia el aviso de
+       "configura el numero" aunque el numero si estuviera puesto: el boton
+       "Finalizar por WhatsApp" no llevaba a ningun lado.
+
+       Ahora la pestaña se abre dentro del gesto sincronico del click (unico
+       momento en que Android Chrome / iOS Safari no lo tratan como popup) SIN
+       la feature noopener, y se anula opener a mano: misma garantia de
+       seguridad conservando la referencia. Si aun asi se bloquea, se navega en
+       la MISMA pestaña; wa.me es universal link, abre la app de WhatsApp y la
+       tienda queda en el historial. */
+    let checkoutBusy = false;
     const onCheckoutClick = () => {
-      if (!cartState.items.length) return;
-      // Abrir la pestaña de inmediato (gesto sincrónico del usuario) para que
-      // el navegador no la bloquee como popup; se rellena la URL cuando
-      // llegue la respuesta verificada del servidor.
-      const win = window.open('', '_blank', 'noopener');
+      if (!cartState.items.length || checkoutBusy) return;
+      checkoutBusy = true;
+
+      // Feedback visible: el server action tarda y parecia que el boton no hacia nada.
+      const checkoutLabel = cartCheckoutBtn?.querySelector('span') ?? null;
+      const checkoutLabelText = checkoutLabel?.textContent ?? '';
+      if (cartCheckoutBtn) {
+        cartCheckoutBtn.disabled = true;
+        cartCheckoutBtn.setAttribute('aria-busy', 'true');
+        cartCheckoutBtn.classList.add('is-busy');
+      }
+      if (checkoutLabel) checkoutLabel.textContent = 'Preparando pedido…';
+      const restoreCheckoutBtn = () => {
+        checkoutBusy = false;
+        if (cartCheckoutBtn) {
+          cartCheckoutBtn.disabled = false;
+          cartCheckoutBtn.removeAttribute('aria-busy');
+          cartCheckoutBtn.classList.remove('is-busy');
+        }
+        if (checkoutLabel) checkoutLabel.textContent = checkoutLabelText;
+      };
+
+      let win: Window | null = null;
+      try {
+        win = window.open('', '_blank');
+        // Equivalente a rel="noopener": about:blank todavia es same-origin aqui,
+        // asi que se corta el vinculo antes de navegar a wa.me.
+        if (win) win.opener = null;
+      } catch {
+        win = null;
+      }
+
+      const openWhatsapp = (url: string) => {
+        if (win && !win.closed) {
+          try {
+            win.location.href = url;
+            return;
+          } catch {
+            /* la pestaña murio entre medias: cae al fallback */
+          }
+        }
+        // Popup bloqueado, cerrado o inutilizable: misma pestaña en vez de nada.
+        window.location.assign(url);
+      };
+
       getCartSummary(cartState.items.map((i) => ({ productId: i.id, size: i.size, qty: i.qty })))
         .then((summary) => {
-          if (summary.whatsappUrl && win) {
-            win.location.href = summary.whatsappUrl;
-          } else {
-            win?.close();
-            window.alert('Pedido listo. Configura el número de WhatsApp de V&B para completar el checkout.');
+          if (summary.whatsappUrl) {
+            openWhatsapp(summary.whatsappUrl);
+            restoreCheckoutBtn();
+            return;
           }
+          if (win && !win.closed) win.close();
+          // whatsappUrl es null por DOS motivos (checkout.ts): falta el numero o
+          // no quedo ninguna linea valida. No culpar al numero si lo que pasa es
+          // que el producto se desactivo o se agoto.
+          window.alert(
+            summary.lines.length
+              ? 'Tu pedido está listo, pero falta configurar el número de WhatsApp de la tienda. Inténtalo de nuevo en unos minutos.'
+              : 'Los productos de tu carrito ya no están disponibles. Actualiza la página y vuelve a elegir.'
+          );
+          restoreCheckoutBtn();
         })
         .catch(() => {
-          win?.close();
-          window.alert('No se pudo preparar el pedido. Intenta de nuevo.');
+          if (win && !win.closed) win.close();
+          window.alert('No se pudo preparar el pedido. Revisa tu conexión e inténtalo de nuevo.');
+          restoreCheckoutBtn();
         });
     };
     cartCheckoutBtn?.addEventListener('click', onCheckoutClick);
@@ -417,7 +532,7 @@ export default function SiteScript({ bundleRules, shippingCost, searchProducts }
             }
           });
         },
-        { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+        { threshold: 0.01, rootMargin: '0px 0px -12% 0px' }
       );
       revealEls.forEach((el) => io?.observe(el));
     } else {

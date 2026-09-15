@@ -868,6 +868,22 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
    producto cerrada (licra 900x920, ratio 0.98): esa es MAS ancha que la caja,
    recorta en horizontal y el eje Y se ignora. */
 .immersive__figure img{ object-position: 50% 0%; }
+/* Video 3D de la licra (fondo de estudio claro). Encima del resplandor vino de
+   .immersive::after, que sobre un fondo claro lo teñia de rosado; debajo de la
+   marca V&B y del texto (z-index 2). */
+.immersive__figure{ z-index: 1; background: #d8d8d8; }
+.immersive__video{
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 50%;
+  display: block;
+}
+/* Sombra corta arriba solo para que la marca blanca "V&B / PERFORMANCE APPAREL",
+   que va sobre la esquina del video, se lea sobre el fondo claro. */
+.immersive__shade{
+  position: absolute; inset: 0 0 auto 0; height: 34%;
+  background: linear-gradient(180deg, rgba(5,5,5,.5) 0%, rgba(5,5,5,0) 100%);
+  pointer-events: none;
+}
 .immersive__mark{
   position: absolute; top: 28px; left: var(--gutter);
   display: flex; flex-direction: column; gap: 2px;

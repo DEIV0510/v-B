@@ -1,8 +1,18 @@
 import { splitLines } from '@/lib/text';
 import type { SectionData } from './types';
+import ImmersiveVideo from '@/components/store/ImmersiveVideo';
+
+/* Video 3D de la licra que eligio el dueño para esta franja (reemplaza la foto del
+   atleta). Va fijo en codigo y no en la BD: la biblioteca de Imagenes del panel solo
+   maneja fotos, y un .mp4 alli saldria como miniatura rota. El texto de la seccion
+   sigue editandose desde el panel. */
+const IMMERSIVE_VIDEO = {
+  src: '/assets/video/licra-3d.mp4',
+  poster: '/assets/video/licra-3d-poster.webp',
+  label: 'Licra de compresión V&B gris girando 360 grados'
+};
 
 export default function Immersive({ section }: { section: SectionData }) {
-  const img = section.images[0]?.media;
   const lines = splitLines(section.title);
   const lastLine = lines[lines.length - 1] ?? '';
   const leadingLines = lines.slice(0, -1);
@@ -11,7 +21,8 @@ export default function Immersive({ section }: { section: SectionData }) {
   return (
     <section className="immersive grain">
       <div className="immersive__figure product-cover corner-frame reveal">
-        {img && <img src={img.url} alt={img.altText} width={img.width ?? undefined} height={img.height ?? undefined} loading="lazy" decoding="async" />}
+        <ImmersiveVideo src={IMMERSIVE_VIDEO.src} poster={IMMERSIVE_VIDEO.poster} label={IMMERSIVE_VIDEO.label} />
+        <span className="immersive__shade" aria-hidden="true" />
       </div>
 
       <div className="immersive__mark reveal">

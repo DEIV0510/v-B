@@ -872,11 +872,16 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
    .immersive::after, que sobre un fondo claro lo teñia de rosado; debajo de la
    marca V&B y del texto (z-index 2). */
 .immersive__figure{ z-index: 1; background: #d8d8d8; }
+.immersive__video-wrap{ width: 100%; height: 100%; }
 .immersive__video{
   width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 50%;
   display: block;
 }
+/* Pisa el object-position:50% 0% de ".immersive__figure img" (pensado para la
+   foto vertical del atleta que este video reemplazó): el póster es el primer
+   fotograma del video y debe quedar encuadrado igual que él, centrado. */
+.immersive__figure img.immersive__video{ object-position: 50% 50%; }
 /* Sombra corta arriba solo para que la marca blanca "V&B / PERFORMANCE APPAREL",
    que va sobre la esquina del video, se lea sobre el fondo claro. */
 .immersive__shade{

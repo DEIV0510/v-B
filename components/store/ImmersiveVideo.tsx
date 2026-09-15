@@ -11,17 +11,21 @@ type Props = {
 /**
  * Video en bucle de la sección inmersiva (licra girando en 3D).
  *
- * - No usa autoPlay: se reproduce solo mientras la franja está en pantalla
- *   (IntersectionObserver) y se pausa al salir, para no gastar batería ni datos
- *   del celular en un video que nadie está viendo. preload="none" hace lo mismo
- *   con la descarga: el póster (primer fotograma) se ve hasta que hace falta.
- * - muted se fija por JS antes de play(): React no pinta el atributo muted en el
- *   HTML del servidor, y iOS solo deja reproducir sin gesto si el video está
- *   silenciado (el archivo además va sin pista de audio) y en línea (playsInline).
- * - Con "reducir movimiento" activado se queda quieto en el póster.
+ * - El <video> ni se monta hasta que la franja está a punto de entrar en pantalla
+ *   (IntersectionObserver con rootMargin amplio): antes de eso solo hay una <img>
+ *   con el póster, así que nadie descarga el video si no llega a esa parte.
+ * - Al montarlo lleva autoPlay nativo (además de muted/loop/playsInline) en vez de
+ *   depender solo de un play() por JS: es el único modo de autoplay que iOS Safari
+ *   y los navegadores embebidos (WhatsApp/Instagram) respetan de forma consistente
+ *   sin gesto del usuario. El IntersectionObserver lo pausa (y lo vuelve a montar
+ *   desde el póster) si el cliente sigue bajando y sale del margen — no sigue
+ *   sonando de fondo ni gastando batería fuera de vista.
+ * - Con "reducir movimiento" activado nunca se monta: se queda quieto en el póster.
  */
 export default function ImmersiveVideo({ src, poster, label }: Props) {
-  const ref = useRef<HTMLVideoElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [nearView, setNearView] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -33,52 +37,50 @@ export default function ImmersiveVideo({ src, poster, label }: Props) {
   }, []);
 
   useEffect(() => {
-    const video = ref.current;
-    if (!video) return;
-    video.muted = true;
-    if (reducedMotion) {
-      video.pause();
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    if (typeof IntersectionObserver !== 'function') {
+      setNearView(true);
       return;
     }
+    const io = new IntersectionObserver(([entry]) => setNearView(entry?.isIntersecting ?? false), {
+      rootMargin: '250px 0px',
+      threshold: 0.01
+    });
+    io.observe(wrap);
+    return () => io.disconnect();
+  }, []);
 
-    const play = () => {
-      if (video.preload !== 'auto') video.preload = 'auto';
-      video.play().catch(() => {
-        // Modo ahorro de datos o navegador que bloquea: queda el póster, sin error.
-      });
-    };
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.play().catch(() => {
+      // Móvil en ahorro de datos o navegador que bloquea igual: queda el póster.
+    });
+  }, [nearView]);
 
-    if (typeof IntersectionObserver !== 'function') {
-      play();
-      return () => video.pause();
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) play();
-        else video.pause();
-      },
-      { threshold: 0.15 }
-    );
-    io.observe(video);
-    return () => {
-      io.disconnect();
-      video.pause();
-    };
-  }, [reducedMotion]);
+  const showVideo = nearView && !reducedMotion;
 
   return (
-    <video
-      ref={ref}
-      className="immersive__video"
-      src={src}
-      poster={poster}
-      muted
-      loop
-      playsInline
-      preload="none"
-      disablePictureInPicture
-      aria-label={label}
-    />
+    <div ref={wrapRef} className="immersive__video-wrap">
+      {showVideo ? (
+        <video
+          ref={videoRef}
+          className="immersive__video"
+          src={src}
+          poster={poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          aria-label={label}
+        />
+      ) : (
+        <img className="immersive__video" src={poster} alt={label} />
+      )}
+    </div>
   );
 }

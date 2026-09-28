@@ -872,7 +872,26 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
    .immersive::after, que sobre un fondo claro lo teñia de rosado; debajo de la
    marca V&B y del texto (z-index 2). */
 .immersive__figure{ z-index: 1; background: #d8d8d8; }
-.immersive__video-wrap{ width: 100%; height: 100%; }
+.immersive__video-wrap{ position: relative; width: 100%; height: 100%; }
+/* Pausa/play del video. Inset >= 26px y z-index 3: .corner-frame::after es un overlay z-index 2 con inset 18px. */
+.immersive__ctl{
+  position: absolute; right: 28px; bottom: 28px; z-index: 3;
+  width: 44px; height: 44px; padding: 0; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  color: var(--c-white); background: rgba(5,5,5,.6);
+  border: 1px solid rgba(255,255,255,.3);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: background var(--dur-fast) var(--ease);
+}
+.immersive__ctl:hover{ background: rgba(5,5,5,.8); }
+.immersive__ctl:focus-visible{ outline: 2px solid var(--c-white); outline-offset: 3px; }
+.immersive__ctl svg{ width: 18px; height: 18px; fill: currentColor; }
+/* Autoplay bloqueado: el play va grande y al centro para que se note que hay que tocar. */
+.immersive__ctl--center{
+  right: auto; bottom: auto; left: 50%; top: 50%;
+  width: 72px; height: 72px; transform: translate(-50%, -50%);
+}
+.immersive__ctl--center svg{ width: 26px; height: 26px; }
 .immersive__video{
   width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 50%;

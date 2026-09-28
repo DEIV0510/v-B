@@ -70,6 +70,9 @@ export default function Testimonials({ section }: Props) {
         <p className="testimonials__lede reveal">Mensajes de clientes al recibir su pedido.</p>
       </div>
 
+      {/* En la fila deslizable el lazy nativo no sirve: lo que queda fuera de la fila cuenta como
+          fuera de pantalla y no carga hasta deslizar (la captura aparece tarde). Las primeras 6
+          cargan normal con prioridad baja (~30 kB c/u); solo las extras que suba el panel van lazy. */}
       <div className="testimonials__grid reveal">
         {shots.map((shot, idx) => (
           <img
@@ -78,7 +81,8 @@ export default function Testimonials({ section }: Props) {
             alt={shot.alt}
             width={shot.width}
             height={shot.height}
-            loading="lazy"
+            fetchPriority="low"
+            loading={idx < 6 ? undefined : 'lazy'}
             decoding="async"
           />
         ))}

@@ -1056,60 +1056,52 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 }
 .testimonials__lede{ color: var(--c-grey-dim); font-size: 14.5px; margin-top: 18px; }
 
-/* Las capturas de WhatsApp son verticales y cada una trae un alto distinto: con
-   columnas fijas las filas quedaban dentadas y, con 1 o 2 capturas, media
-   rejilla vacia. Fila centrada que se envuelve sola: sirve igual con 1, 2, 3,
-   4, 5 o 6 capturas. Nunca se recorta ni se deforma la captura. */
+/* Las capturas de WhatsApp son verticales y cada una trae un alto distinto; nunca
+   se recortan ni se deforman (ancho y alto los pone la proporcion real).
+   Celular y tablet: una fila que se desliza con el dedo, porque 6 capturas altas
+   apiladas son ~2.800 px de scroll. La siguiente captura asoma por el borde para
+   que se entienda que hay mas, y el scroll queda dentro de la fila, no de la pagina.
+   Los margenes auto del primero y el ultimo la centran si caben y la dejan
+   alcanzable desde la izquierda si no (justify-content:center la cortaria). */
 .testimonials__grid{
-  max-width: var(--container); margin: 0 auto;
-  display: flex; flex-wrap: wrap;
-  justify-content: center; align-items: flex-start;
-  gap: 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 4px var(--gutter) 12px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
 }
+.testimonials__grid::-webkit-scrollbar{ display: none; }
+.testimonials__grid > :first-child{ margin-inline-start: auto; }
+.testimonials__grid > :last-child{ margin-inline-end: auto; }
 .testimonials__grid img{
-  flex: 0 0 auto;
-  width: auto; height: auto;          /* ambos auto => se respeta la proporcion real */
-  max-width: min(300px, 100%);        /* movil: una por fila, legible */
-  max-height: 62vh;                   /* una captura muy alta no se come la pantalla */
+  flex: 0 0 auto; scroll-snap-align: start;
+  width: auto; height: clamp(340px, 58vh, 440px);
+  max-width: none;
   border-radius: 10px;
   border: 1px solid var(--line);
   background: var(--c-void);
   box-shadow: 0 20px 50px -24px rgba(0,0,0,.6);
 }
-/* Celular: 6 capturas altas una debajo de otra son ~2.800 px de scroll. Se pasan a
-   una fila que se desliza con el dedo; la siguiente captura asoma por el borde para
-   que se entienda que hay mas. El scroll queda dentro de la fila, no de la pagina. */
 .testimonials__hint{
   margin-top: 8px;
   font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
   color: var(--c-grey-dim);
 }
-@media (max-width: 639px){
-  .testimonials__grid{
-    flex-wrap: nowrap; justify-content: flex-start;
-    overflow-x: auto; overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
-    scrollbar-width: none;
-    margin: 0 calc(var(--gutter) * -1);
-    padding: 4px var(--gutter) 12px;
-  }
-  .testimonials__grid::-webkit-scrollbar{ display: none; }
-  .testimonials__grid img{
-    scroll-snap-align: start;
-    height: clamp(340px, 58vh, 440px);
-    max-width: none; max-height: none;
-  }
-}
 @media (min-width: 640px){
-  /* 1120px de ancho + alto igual para todas => siempre 3 por fila (3+3 con las 6
-     capturas). Con el ancho completo del contenedor cabian 4 y la segunda fila
-     quedaba con 2 sueltas. El ancho lo pone la imagen, sin recortar. */
-  .testimonials__grid{ gap: 24px; max-width: 1120px; }
-  .testimonials__grid img{
-    height: clamp(320px, 38vw, 520px);
-    max-width: 100%;
-    max-height: none;                 /* sin esto, en pantallas bajas 62vh deformaria */
+  .testimonials__grid img{ height: clamp(380px, 58vh, 500px); }
+}
+@media (min-width: 1024px){
+  /* Escritorio: rejilla centrada que se envuelve sola y sirve igual con 1 a 30
+     capturas. 1120px de ancho + alto igual para todas => 3 por fila (3+3 con las 6);
+     con el ancho completo del contenedor cabian 4 y la segunda fila quedaba con 2. */
+  .testimonials__grid{
+    flex-wrap: wrap; justify-content: center; gap: 24px;
+    max-width: 1120px; margin: 0 auto; padding: 0;
+    overflow: visible; scroll-snap-type: none;
   }
+  .testimonials__grid > :first-child, .testimonials__grid > :last-child{ margin-inline: 0; }
+  .testimonials__grid img{ height: clamp(320px, 43vw, 520px); max-width: 100%; }
   .testimonials__hint{ display: none; }
 }
 

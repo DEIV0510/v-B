@@ -1040,7 +1040,8 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
    TESTIMONIOS / PRUEBA SOCIAL
    ========================================================= */
 .testimonials{ padding: 76px var(--gutter) 84px; background: var(--c-carbon); text-align: center; }
-.testimonials__head{ max-width: 640px; margin: 0 auto 48px; }
+.testimonials__head{ max-width: 640px; margin: 0 auto 44px; }
+.testimonials .dot{ color: var(--c-wine-3); }
 .testimonials__badge{
   display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
   margin: 18px auto 0;
@@ -1075,15 +1076,41 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   background: var(--c-void);
   box-shadow: 0 20px 50px -24px rgba(0,0,0,.6);
 }
-@media (min-width: 640px){
-  .testimonials__grid{ gap: 24px; }
-  /* Alto igual para todas => la fila queda pareja aunque cada captura tenga
-     otra proporcion; el ancho lo pone la imagen, sin recortar. */
+/* Celular: 6 capturas altas una debajo de otra son ~2.800 px de scroll. Se pasan a
+   una fila que se desliza con el dedo; la siguiente captura asoma por el borde para
+   que se entienda que hay mas. El scroll queda dentro de la fila, no de la pagina. */
+.testimonials__hint{
+  margin-top: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--c-grey-dim);
+}
+@media (max-width: 639px){
+  .testimonials__grid{
+    flex-wrap: nowrap; justify-content: flex-start;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 4px var(--gutter) 12px;
+  }
+  .testimonials__grid::-webkit-scrollbar{ display: none; }
   .testimonials__grid img{
-    height: clamp(320px, 40vw, 440px);
+    scroll-snap-align: start;
+    height: clamp(340px, 58vh, 440px);
+    max-width: none; max-height: none;
+  }
+}
+@media (min-width: 640px){
+  /* 1120px de ancho + alto igual para todas => siempre 3 por fila (3+3 con las 6
+     capturas). Con el ancho completo del contenedor cabian 4 y la segunda fila
+     quedaba con 2 sueltas. El ancho lo pone la imagen, sin recortar. */
+  .testimonials__grid{ gap: 24px; max-width: 1120px; }
+  .testimonials__grid img{
+    height: clamp(320px, 38vw, 520px);
     max-width: 100%;
     max-height: none;                 /* sin esto, en pantallas bajas 62vh deformaria */
   }
+  .testimonials__hint{ display: none; }
 }
 
 /* =========================================================

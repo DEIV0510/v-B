@@ -61,12 +61,6 @@ export default function Testimonials({ section }: Props) {
     <section className="testimonials">
       <div className="testimonials__head">
         <p className="eyebrow reveal">CLIENTES SATISFECHOS</p>
-        <h2 className="section-title reveal">
-          <span className="line">ASÍ NOS</span>
-          <span className="line">
-            ESCRIBEN<span className="dot">.</span>
-          </span>
-        </h2>
         <p className="testimonials__lede reveal">Mensajes de clientes al recibir su pedido.</p>
       </div>
 

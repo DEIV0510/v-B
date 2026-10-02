@@ -17,6 +17,29 @@
   --line: rgba(255,255,255,.12);
   --line-soft: rgba(255,255,255,.07);
 
+  /* Tinta translucida (bordes, hover, fondos tenues): en oscuro es blanco con alfa y en
+     claro es negro con alfa, asi un borde .25 pesa igual en los dos temas. */
+  --ink-06: rgba(255,255,255,.06);
+  --ink-15: rgba(255,255,255,.15);
+  --ink-20: rgba(255,255,255,.2);
+  --ink-25: rgba(255,255,255,.25);
+  --ink-30: rgba(255,255,255,.3);
+  --ink-35: rgba(255,255,255,.35);
+
+  /* Blanco LITERAL, para texto sobre fotos/video, sobre el vino y sobre superficies que
+     no cambian de tema. --c-white es la "tinta" del tema: en modo claro pasa a casi negro. */
+  --c-on-dark: #ffffff;
+  --c-on-dark-soft: #d9d9d9;
+  --c-on-dark-dim: rgba(255,255,255,.58);
+  --c-on-dark-dim2: rgba(255,255,255,.36);
+  /* Fondo detras de las fotos de producto: manda la foto, no el tema. */
+  --c-mat: #1c1c1c;
+
+  --header-bg: rgba(5,5,5,.72);
+  --panel-bg: rgba(5,5,5,.96);
+  --scrim-mid: rgba(5,5,5,.6);
+  --shadow-img: rgba(0,0,0,.6);
+
   --ff-display: var(--font-anton), 'Arial Narrow', sans-serif;
   --ff-body: var(--font-inter), -apple-system, sans-serif;
 
@@ -31,6 +54,45 @@
   --ease-in: cubic-bezier(.7,0,.84,0);
 
   --header-h: 76px;
+}
+
+/* =========================================================
+   MODO CLARO — <html data-theme="light"> (boton del header).
+   Solo la tienda: el script que pone el atributo vive en el layout de (store) y
+   nunca en /admin, que comparte estos tokens y no esta pensado para cambiar.
+   Se redefine la paleta, no cada regla: --c-white es la "tinta" del tema (pasa a
+   casi negro) y el blanco literal para texto sobre fotos es --c-on-dark.
+   ========================================================= */
+html[data-theme="light"]{
+  color-scheme: light;
+  --c-void: #ffffff;
+  --c-carbon: #f4f4f2;
+  --c-charcoal: #ebebe8;
+  --c-charcoal-2: #e2e2de;
+  --c-white: #0b0b0b;
+  --c-grey: #2a2a2a;
+  --c-grey-dim: rgba(11,11,11,.72);
+  --c-grey-dim2: rgba(11,11,11,.62);
+  --c-wine-glow: rgba(160,0,37,.16);
+  --line: rgba(11,11,11,.14);
+  --line-soft: rgba(11,11,11,.09);
+  --ink-06: rgba(11,11,11,.06);
+  --ink-15: rgba(11,11,11,.15);
+  --ink-20: rgba(11,11,11,.2);
+  --ink-25: rgba(11,11,11,.25);
+  --ink-30: rgba(11,11,11,.3);
+  --ink-35: rgba(11,11,11,.35);
+  --header-bg: rgba(255,255,255,.96);
+  --panel-bg: rgba(255,255,255,.98);
+  --scrim-mid: rgba(255,255,255,.6);
+  --shadow-img: rgba(0,0,0,.2);
+}
+
+/* Cambio de tema suave (solo al pulsar el boton, nunca al cargar: no hay parpadeo).
+   Lo pone ThemeToggle durante ~350 ms y se omite con "reducir movimiento". */
+html[data-theme-anim] *, html[data-theme-anim] *::before, html[data-theme-anim] *::after{
+  transition: background-color .28s var(--ease), color .28s var(--ease), border-color .28s var(--ease),
+    box-shadow .28s var(--ease), fill .28s var(--ease), stroke .28s var(--ease) !important;
 }
 
 /* =========================================================
@@ -56,7 +118,7 @@ ul, ol{ margin: 0; padding: 0; list-style: none; }
 h1,h2,h3,p{ margin: 0; }
 input{ font: inherit; color: inherit; background: none; border: 0; }
 :focus-visible{ outline: 2px solid var(--c-wine-3); outline-offset: 3px; }
-::selection{ background: var(--c-wine); color: var(--c-white); }
+::selection{ background: var(--c-wine); color: var(--c-on-dark); }
 
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{
@@ -118,16 +180,16 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .btn:active{ transform: scale(.97); }
 .btn--primary{
   background: var(--c-wine);
-  color: var(--c-white);
+  color: var(--c-on-dark);
   border-color: var(--c-wine);
 }
 .btn--primary:hover{ background: var(--c-wine-3); border-color: var(--c-wine-3); }
 .btn--ghost{
   background: transparent;
   color: var(--c-white);
-  border-color: rgba(255,255,255,.35);
+  border-color: var(--ink-35);
 }
-.btn--ghost:hover{ border-color: var(--c-white); background: rgba(255,255,255,.06); }
+.btn--ghost:hover{ border-color: var(--c-white); background: var(--ink-06); }
 .btn--full{ width: 100%; }
 .btn--buy{
   width: 100%;
@@ -137,7 +199,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   justify-content: space-between;
 }
 .btn--buy svg{ width: 18px; height: 18px; transition: transform var(--dur) var(--ease); }
-.btn--buy:hover{ background: var(--c-wine-3); border-color: var(--c-wine-3); color: var(--c-white); }
+.btn--buy:hover{ background: var(--c-wine-3); border-color: var(--c-wine-3); color: var(--c-on-dark); }
 .btn--buy:hover svg{ transform: translateX(4px); }
 
 /* =========================================================
@@ -146,6 +208,13 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .loader{
   position: fixed; inset: 0;
   z-index: 999;
+}
+/* La cortina de carga es la firma de la marca y siempre es oscura: en modo claro se le
+   devuelve la paleta oscura solo a ella. */
+html[data-theme="light"] .loader{
+  --c-void: #050505;
+  --c-grey-dim: rgba(255,255,255,.58);
+  --c-grey-dim2: rgba(255,255,255,.36);
 }
 /* Navegacion interna: el script en linea de Loader.tsx marca <html> y la
    cortina ni se pinta. Ver el comentario alli. */
@@ -246,12 +315,16 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   position: absolute; inset: 0;
   z-index: -1;
   opacity: 0;
-  background: rgba(5,5,5,.72);
+  background: var(--header-bg);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   transition: opacity var(--dur) var(--ease);
 }
 .header--scrolled::before{ opacity: 1; }
+/* En claro la barra es blanca desde arriba: sin ella los iconos oscuros quedarian
+   encima de las fotos oscuras de la portada y no se verian. */
+html[data-theme="light"] .header::before{ opacity: 1; }
+html[data-theme="light"] .header{ box-shadow: 0 1px 0 var(--line); }
 .header__row{
   width: 100%;
   max-width: var(--container);
@@ -297,17 +370,23 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   min-width: 16px; height: 16px; padding: 0 3px;
   border-radius: 999px;
   background: var(--c-wine-3);
-  color: var(--c-white);
+  color: var(--c-on-dark);
   font-size: 10px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   line-height: 1;
 }
 .icon-btn__badge[hidden]{ display: none; }
+/* Boton de tema: en oscuro muestra el sol (pasa a claro), en claro la luna (pasa a oscuro). */
+.theme-toggle__moon{ display: none; }
+html[data-theme="light"] .theme-toggle__sun{ display: none; }
+html[data-theme="light"] .theme-toggle__moon{ display: block; }
 
 .burger{
   display: none;
   width: 40px; height: 40px;
   flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  /* Por encima del cajon del menu (z-index 92) para que su "X" siga a la vista y cierre el menu. */
+  position: relative; z-index: 93;
 }
 .burger span{
   display: block; width: 22px; height: 1.5px; background: var(--c-white);
@@ -320,7 +399,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 /* search panel */
 .search-panel{
   position: absolute; top: 100%; left: 0; right: 0;
-  background: rgba(5,5,5,.96);
+  background: var(--panel-bg);
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -341,10 +420,14 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 /* =========================================================
    MOBILE NAV OVERLAY
    ========================================================= */
+/* z-index 89, POR DEBAJO del header (90). El cajon del menu vive dentro del header, asi que su
+   z-index 92 solo cuenta dentro de ese contexto: con el overlay en 91 quedaba ENCIMA del
+   cajon, se comia los toques (tocar "Colección" solo cerraba el menu, sin navegar) y le
+   daba un velo gris. Ahora el cajon queda sobre el velo y el boton (ver .burger) sobre el cajon. */
 .nav-overlay{
   position: fixed; inset: 0;
   background: rgba(0,0,0,.5);
-  z-index: 91;
+  z-index: 89;
   opacity: 0; visibility: hidden;
   transition: opacity var(--dur) var(--ease), visibility var(--dur) var(--ease);
 }
@@ -593,11 +676,12 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   .hero__scroll{
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     position: absolute; right: clamp(40px,6vw,90px); bottom: 34px;
-    font-size: 10px; font-weight: 700; letter-spacing: .3em; color: var(--c-grey-dim2);
+    /* Cae sobre la foto del mosaico (columna derecha), no sobre el fondo de la pagina. */
+    font-size: 10px; font-weight: 700; letter-spacing: .3em; color: var(--c-on-dark-dim2);
     z-index: 2;
   }
   .hero__scroll i{
-    width: 1px; height: 34px; background: var(--c-grey-dim2);
+    width: 1px; height: 34px; background: var(--c-on-dark-dim2);
     position: relative; overflow: hidden;
   }
   .hero__scroll i::after{
@@ -639,6 +723,12 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 }
 .value__title .line{ display: block; }
 .value__caption{ color: var(--c-grey-dim); font-size: 15px; max-width: 44ch; margin-inline: auto; }
+/* En claro la foto oscura queda como una textura sutil en gris y el viñeteado deja de
+   oscurecer el centro. */
+html[data-theme="light"] .value__bg img{ opacity: .12; }
+html[data-theme="light"] .value::before{
+  background: radial-gradient(120% 90% at 50% 30%, rgba(255,255,255,0), var(--c-carbon) 78%);
+}
 
 /* =========================================================
    DETALLES / BENTO GALLERY
@@ -655,7 +745,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .bento__item{
   position: relative; margin: 0;
   overflow: hidden;
-  background: var(--c-charcoal);
+  background: var(--c-mat);
   aspect-ratio: 4 / 5;
 }
 .bento__item img{
@@ -667,6 +757,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   position: absolute; left: 0; right: 0; bottom: 0;
   padding: 20px 20px 18px;
   background: linear-gradient(0deg, rgba(0,0,0,.75), transparent);
+  color: var(--c-on-dark);
   font-size: 12.5px; font-weight: 600; letter-spacing: .04em;
   display: flex; align-items: baseline; gap: 10px;
 }
@@ -754,6 +845,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 .product-card--light{ background: var(--c-charcoal-2); }
+html[data-theme="light"] .product-card--light{ background: var(--c-void); }
 .product-card:hover{
   border-color: var(--c-wine-2);
   box-shadow: 0 24px 60px -20px var(--c-wine-glow);
@@ -778,7 +870,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-card__body{ padding: 22px 22px 26px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 .product-card__row{ display: flex; align-items: center; justify-content: space-between; }
 .product-card__row h3{ font-family: var(--ff-display); font-weight: 400; font-size: 20px; letter-spacing: .01em; }
-.swatch{ width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); flex: 0 0 auto; }
+.swatch{ width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--ink-35); flex: 0 0 auto; }
 .swatch--black{ background: #0a0a0a; }
 .swatch--white{ background: #f4f4f4; }
 .swatch--merlot{ background: var(--c-wine); }
@@ -788,7 +880,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .size-picker{ display: flex; gap: 8px; }
 .size-pill{
   width: 38px; height: 38px;
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid var(--ink-25);
   font-size: 12px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
@@ -796,7 +888,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .size-pill:hover{ border-color: var(--c-white); }
 .size-pill.is-active{ background: var(--c-white); color: var(--c-void); border-color: var(--c-white); }
 
-.btn--buy.is-added{ background: var(--c-wine-3); border-color: var(--c-wine-3); color: var(--c-white); }
+.btn--buy.is-added{ background: var(--c-wine-3); border-color: var(--c-wine-3); color: var(--c-on-dark); }
 
 .product-card.is-highlight{
   border-color: var(--c-wine-3);
@@ -809,24 +901,26 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-card__flag{
   position: absolute; top: 14px; left: 14px; z-index: 2;
   background: var(--c-void);
-  border: 1px solid rgba(255,255,255,.3);
+  border: 1px solid var(--ink-30);
   color: var(--c-grey);
   font-size: 10.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
   padding: 7px 12px;
 }
 .size-pill:disabled{
   opacity: .3; cursor: not-allowed;
-  border-color: rgba(255,255,255,.15);
+  border-color: var(--ink-15);
 }
-.size-pill:disabled:hover{ border-color: rgba(255,255,255,.15); }
+.size-pill:disabled:hover{ border-color: var(--ink-15); }
 .btn--buy:disabled{
-  background: transparent; color: var(--c-grey-dim2); border-color: rgba(255,255,255,.2);
+  background: transparent; color: var(--c-grey-dim2); border-color: var(--ink-20);
   cursor: not-allowed; justify-content: center;
 }
-.btn--buy:disabled:hover{ background: transparent; border-color: rgba(255,255,255,.2); color: var(--c-grey-dim2); }
+.btn--buy:disabled:hover{ background: transparent; border-color: var(--ink-20); color: var(--c-grey-dim2); }
 
 @media (min-width: 780px){
-  .shop__grid{ overflow: visible; display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; }
+  /* minmax(0, 1fr): con 1fr a secas la pista no baja del tamaño de su contenido (la foto
+     de la licra mide 900px) y entre 780 y ~1000px la tercera tarjeta se salia de la pantalla. */
+  .shop__grid{ overflow: visible; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; }
   .product-card{ flex: none; }
 }
 
@@ -878,13 +972,13 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   position: absolute; right: 28px; bottom: 28px; z-index: 3;
   width: 44px; height: 44px; padding: 0; border-radius: 50%;
   display: grid; place-items: center; cursor: pointer;
-  color: var(--c-white); background: rgba(5,5,5,.6);
+  color: var(--c-on-dark); background: rgba(5,5,5,.6);
   border: 1px solid rgba(255,255,255,.3);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   transition: background var(--dur-fast) var(--ease);
 }
 .immersive__ctl:hover{ background: rgba(5,5,5,.8); }
-.immersive__ctl:focus-visible{ outline: 2px solid var(--c-white); outline-offset: 3px; }
+.immersive__ctl:focus-visible{ outline: 2px solid var(--c-on-dark); outline-offset: 3px; }
 .immersive__ctl svg{ width: 18px; height: 18px; fill: currentColor; }
 /* Autoplay bloqueado: el play va grande y al centro para que se note que hay que tocar. */
 .immersive__ctl--center{
@@ -912,10 +1006,19 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   position: absolute; top: 28px; left: var(--gutter);
   display: flex; flex-direction: column; gap: 2px;
   z-index: 2;
+  /* Debajo de 900px va encima del video: blanco literal en los dos temas. */
+  color: var(--c-on-dark);
   text-shadow: 0 2px 10px rgba(0,0,0,.85);
 }
 .immersive__mark span{ font-family: var(--ff-display); font-size: 22px; letter-spacing: .02em; }
-.immersive__mark small{ font-size: 9.5px; font-weight: 700; letter-spacing: .28em; color: var(--c-grey-dim); }
+.immersive__mark small{ font-size: 9.5px; font-weight: 700; letter-spacing: .28em; color: var(--c-on-dark-dim); }
+@media (min-width: 900px){
+  /* Con dos columnas la marca queda sobre el fondo de la pagina, no sobre el video:
+     sigue al tema (en claro se oscurece y pierde la sombra). */
+  .immersive__mark{ color: var(--c-white); }
+  .immersive__mark small{ color: var(--c-grey-dim); }
+  html[data-theme="light"] .immersive__mark{ text-shadow: none; }
+}
 
 .immersive__quote{
   position: relative; z-index: 2;
@@ -952,7 +1055,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   .immersive__index{
     display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
     position: absolute; right: var(--gutter); top: 28px;
-    font-size: 10.5px; font-weight: 700; letter-spacing: .18em; color: var(--c-grey-dim);
+    font-size: 10.5px; font-weight: 700; letter-spacing: .18em; color: var(--c-on-dark-dim);
     text-align: right;
     z-index: 2;
     text-shadow: 0 2px 10px rgba(0,0,0,.85);
@@ -1034,12 +1137,24 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   z-index: 0;
 }
 .final-cta__figure img{ opacity: .8; filter: grayscale(.25); }
+/* En claro la foto oscura baja a una marca de agua: con el 80% de opacidad el degradado
+   blanco sobre ella se veia como niebla gris. */
+html[data-theme="light"] .final-cta__figure img{ opacity: .4; filter: grayscale(.6); }
 .final-cta__scrim{
   position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(90deg, var(--c-void) 0%, rgba(5,5,5,.6) 34%, transparent 60%),
+    linear-gradient(90deg, var(--c-void) 0%, var(--scrim-mid) 34%, transparent 60%),
     linear-gradient(0deg, var(--c-void) 0%, transparent 20%);
   pointer-events: none;
+}
+/* La seccion mide 1180px y va centrada: sobre el fondo negro sus bordes no se notan, sobre el
+   blanco la foto se cortaba en seco por arriba y por la derecha. Se le suman dos difuminados. */
+html[data-theme="light"] .final-cta__scrim{
+  background:
+    linear-gradient(90deg, var(--c-void) 0%, var(--scrim-mid) 34%, transparent 60%),
+    linear-gradient(0deg, var(--c-void) 0%, transparent 20%),
+    linear-gradient(270deg, var(--c-void) 0%, transparent 16%),
+    linear-gradient(180deg, var(--c-void) 0%, transparent 12%);
 }
 .final-cta__content{
   position: relative; z-index: 2;
@@ -1099,7 +1214,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   border-radius: 10px;
   border: 1px solid var(--line);
   background: var(--c-void);
-  box-shadow: 0 20px 50px -24px rgba(0,0,0,.6);
+  box-shadow: 0 20px 50px -24px var(--shadow-img);
 }
 .testimonials__hint{
   margin-top: 8px;
@@ -1193,7 +1308,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .cart__empty{ color: var(--c-grey-dim); font-size: 14px; text-align: center; padding: 60px 10px; }
 
 .cart-item{ display: flex; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
-.cart-item img{ width: 62px; height: 78px; object-fit: cover; background: var(--c-charcoal); flex: 0 0 auto; }
+.cart-item img{ width: 62px; height: 78px; object-fit: cover; background: var(--c-mat); flex: 0 0 auto; }
 .cart-item__info{ flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .cart-item__info h4{ font-size: 13px; font-weight: 700; letter-spacing: .05em; }
 .cart-item__info span{ font-size: 12px; color: var(--c-grey-dim); }
@@ -1241,7 +1356,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
   display: grid; gap: 40px;
   background: var(--c-void);
 }
-.product-detail__gallery{ background: var(--c-charcoal); }
+.product-detail__gallery{ background: var(--c-mat); }
 .product-detail__main{ width: 100%; aspect-ratio: 4/5; display: block; }
 
 /* Efecto 3D (tilt + brillo) sobre fotos de producto — ver TiltImage.tsx.
@@ -1306,7 +1421,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-detail__thumbs{ display: flex; gap: 10px; margin-top: 10px; }
 .product-detail__thumb{
   width: 64px; height: 80px; padding: 0; flex: 0 0 auto;
-  border: 1px solid var(--line); background: var(--c-charcoal);
+  border: 1px solid var(--line); background: var(--c-mat);
   overflow: hidden; opacity: .6;
   transition: opacity var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
@@ -1327,7 +1442,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 
 .spin360{
   position: relative; display: block; width: 100%; height: 100%;
-  overflow: hidden; background: var(--c-charcoal);
+  overflow: hidden; background: var(--c-mat);
   /* pan-y: los gestos verticales siguen siendo scroll de la pagina, los
      horizontales son del visor. NUNCA 'none': convertiria media pantalla
      del movil en una trampa de scroll. */
@@ -1349,16 +1464,16 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .spin360__badge{
   position: absolute; top: 26px; right: 26px; z-index: 3;
   font-size: 10.5px; font-weight: 700; letter-spacing: .12em;
-  color: var(--c-white); background: rgba(5,5,5,.72);
-  border: 1px solid var(--line); padding: 5px 9px;
+  color: var(--c-on-dark); background: rgba(5,5,5,.72);
+  border: 1px solid rgba(255,255,255,.12); padding: 5px 9px;
   pointer-events: none;
 }
 .spin360__hint{
   position: absolute; left: 50%; bottom: 30px; z-index: 3;
   transform: translateX(-50%);
   font-size: 10.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--c-grey); background: rgba(5,5,5,.72);
-  border: 1px solid var(--line); padding: 7px 14px;
+  color: var(--c-on-dark-soft); background: rgba(5,5,5,.72);
+  border: 1px solid rgba(255,255,255,.12); padding: 7px 14px;
   pointer-events: none; white-space: nowrap;
 }
 .spin360__bar{
@@ -1370,7 +1485,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-detail__thumb--spin span{
   position: absolute; inset: auto 0 0 0;
   font-size: 9px; font-weight: 700; letter-spacing: .08em;
-  color: var(--c-white); background: rgba(5,5,5,.78);
+  color: var(--c-on-dark); background: rgba(5,5,5,.78);
   padding: 3px 0; text-align: center;
 }
 .product-detail__info{ display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -1398,7 +1513,7 @@ input{ font: inherit; color: inherit; background: none; border: 0; }
 .product-detail__related .section-title{ max-width: var(--container); margin: 0 auto 32px; }
 .product-detail__related .shop__grid{ margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
 @media (min-width: 780px){
-  .product-detail__related .shop__grid{ grid-template-columns: repeat(4, 1fr); margin-inline: 0; padding-inline: 0; }
+  .product-detail__related .shop__grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding-inline: 0; }
 }
 
 @media (min-width: 780px){

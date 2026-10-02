@@ -1,3 +1,5 @@
+import ThemeToggle from './ThemeToggle';
+
 type Props = {
   logoUrl: string;
 };
@@ -19,6 +21,7 @@ export default function Header({ logoUrl }: Props) {
           </nav>
 
           <div className="header__actions">
+            <ThemeToggle />
             <button className="icon-btn" id="searchToggle" aria-label="Buscar" aria-expanded="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" strokeLinecap="round" /></svg>
             </button>
